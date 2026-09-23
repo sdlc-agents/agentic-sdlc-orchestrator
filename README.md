@@ -1,482 +1,286 @@
-# ASEP — Agentic Software Engineering Platform
+# ASEP — an agentic SDLC orchestrator
 
-A requirement goes in as one sentence of English. What comes out is a runnable
+Turns a software requirement into a reviewable engineering outcome: a runnable
 project, a test suite that was actually executed, and a trace of every decision
-made along the way — including the ones a human was asked to approve and the
-defect the platform found in its own output and fixed.
+taken to get there.
 
 ```bash
 pip install -e ".[dev]"
 python -m asep url_shortener
 ```
 
-No API key required. The default provider is deterministic, which is explained
-in [What is real and what is simulated](#what-is-real-and-what-is-simulated).
-
-## Setup and evaluation
-
-Python 3.10 or newer. Nothing to configure and no services to start.
-
-```bash
-git clone <this repo> && cd agentic-software-engineering-platform
-pip install -e ".[dev]"          # pydantic, fastapi, httpx, pytest, ruff
-python -m asep --list            # what it can be asked to do
-```
-
-Or in a container, which is the safer option — the validation stage executes
-generated code, and in a container it runs as a non-root user with nothing
-mounted rather than as you:
-
-```bash
-docker build -t asep .
-docker run --rm asep url_shortener
-```
-
-**Evaluate it in four commands**, in the order a sceptical reviewer would:
-
-```bash
-# 1. Watch the mandatory use case run end to end.
-python -m asep url_shortener
-
-# 2. Check the deliverable yourself, outside the platform.
-cd runs/<run-id>/workspace && pytest -q     # 36 passed
-cd -
-
-# 3. Confirm the checks are not decoration — break the output and watch them fail.
-pytest -q tests/test_validation_is_independent.py
-
-# 4. Confirm it refuses to guess.
-python -m asep url_shortener --no-assume    # halts, exits non-zero
-```
-
-Step 2 is the one worth doing. The platform claims the generated suite passes;
-step 2 is you verifying that without taking its word for it.
-
-If you have twenty minutes rather than an afternoon, read
-[`docs/walkthrough.md`](docs/walkthrough.md) — it follows one requirement
-through decomposition, execution, validation and every human gate, citing the
-committed artifacts at each step.
-
-Then read [`runs/<run-id>/summary.md`](examples/greenfield/summary.md) — the
-implementation plan and why each task exists, every artifact with the
-requirements it claims to cover, the decisions and what they cost, the open
-risks, and what the run does **not** establish.
-
-Everything else: `pytest -q` (287 tests, ~150s), `ruff check asep tests scripts`.
+No API key needed. Takes about nine seconds.
 
 ---
 
-## The problem this is built around
+## Watch it catch its own mistake
 
-Getting a language model to emit a plausible file is not the hard part any more.
-The hard part is everything around it: knowing what was actually asked, noticing
-what the request failed to say, deciding what to build before building it,
-keeping the pieces consistent with each other, finding out that the result is
-wrong, and fixing it — without a person having to hold the whole thing together
-by hand.
-
-A single agent asked to design, build, test and sign off produces work that is
-internally consistent and externally unverified. It agrees with itself. That is
-the failure mode this platform is designed against, and most of what follows is
-a consequence of taking it seriously.
-
-## What a run actually does
+The run below builds a URL shortener from one sentence. The interesting part is
+in the middle:
 
 ```
-  **  run 0ee33fc1 (mock mode, 4 tasks)
-  ok  T-001 normalized into 7 functional and 5 non-functional requirements; 3 ambiguity(ies), 3 resolved
-  ok  T-002 Modular monolith with cache-aside reads and an asynchronous analytics writer: 7 component(s), 4 trade-off(s), 4 risk(s), high severity: RISK-002, RISK-003
-  ok  T-003 7 endpoint(s) v1.0.0: POST /api/v1/urls, GET /api/v1/urls/{code}, ...
-  ok  T-004 planned 5 task(s) for injection; T-020 + T-030 can run concurrently
-  ??  T-010 needs approval (risk=medium)
-  ok  T-010 wrote 14 file(s), 723 lines
-  ok  T-020 wrote 4 file(s), 202 lines
-  ok  T-030 wrote 2 file(s), 83 lines
-  ok  T-040 round 1: fail — 6 check(s), 3 error(s), 0 warning(s); failed: api_contract, tests
-  !!  validation round 1 found 3 error(s); 1 are machine-repairable
-        findings: contract declares GET /api/v1/analytics/{code} but no route implements it
-        findings: failing test: tests/test_analytics.py::test_clicks_are_counted
-  ++  injected T-900-R1 and T-901-R1 into the running graph; moved T-050 behind T-901-R1
-  ok  T-900-R1 applied 2 edit(s) across 1 file(s) — Added the analytics route the contract declares
-  ok  T-901-R1 round 2: pass — 6 check(s), 0 error(s), 0 warning(s)
-  ok  validation passed after 1 repair round(s)
-  **  run succeeded in 7472ms
+ok  T-001 normalized into 7 functional and 5 non-functional requirements; 3 ambiguity(ies)
+ok  T-002 Modular monolith with cache-aside reads and an async analytics writer
+ok  T-003 7 endpoint(s) v1.0.0: POST /api/v1/urls, GET /api/v1/urls/{code}, ...
+ok  T-004 planned 5 task(s) for injection; T-020 + T-030 can run concurrently
+??  T-010 needs approval (risk=medium)
+ok  T-010 wrote 14 file(s), 723 lines
+ok  T-040 round 1: fail — 6 check(s), 3 error(s); failed: api_contract, tests
+!!  validation round 1 found 3 error(s); 1 are machine-repairable
+      contract declares GET /api/v1/analytics/{code} but no route implements it
+      failing test: tests/test_analytics.py::test_clicks_are_counted
+++  injected T-900-R1 and T-901-R1 into the running graph; moved T-050 behind T-901-R1
+ok  T-900-R1 applied 2 edit(s) across 1 file(s)
+ok  T-901-R1 round 2: pass — 6 check(s), 0 error(s)
+**  run succeeded — 36 tests passed
 ```
 
-The interesting part is the middle. The implementation stage omitted an endpoint
-that the API contract declared. Nothing in the system was told about that
-specific mistake:
+The implementation stage left out an endpoint the API contract declared. Nobody
+told the system about that specific mistake:
 
-- the **contract check** compared the routes in the AST against the approved
-  contract and found one missing,
-- the **generated test suite** failed on it independently,
-- the engine turned the finding into **two new nodes in a graph that was already
-  running** — a repair and a re-validation,
-- it **moved the summary task behind the re-validation**, so nothing reported on
-  a workspace that was still being rewritten,
-- the repair applied two edits, and the re-run proved they worked: **36 tests,
-  0 failures.**
+- a check compared the routes in the AST against the approved contract and found
+  one missing
+- two generated tests failed on the same gap, independently
+- the engine turned that finding into **two new nodes in a graph that was already
+  executing** — a repair and a re-validation
+- it moved the summary task behind the re-validation, so nothing reported on a
+  workspace that was still being rewritten
+- the repair applied two edits, and the re-run proved they worked
 
-Three full runs — trace, reports and console output — are committed under
-[`examples/`](examples/): [greenfield](examples/greenfield/),
-[brownfield](examples/brownfield/), and an
-[ambiguous requirement](examples/ambiguous/) that halts rather than guessing.
+The whole thing is committed under [`examples/greenfield/`](examples/greenfield/)
+— trace, reports, metrics. [`docs/walkthrough.md`](docs/walkthrough.md) follows
+that run stage by stage.
 
-## Six kinds of engineering work
+## What makes it tick
 
-Real requirements are not all "build me a thing". Extending a system, fixing it,
-restructuring it, testing it and documenting it are different jobs with
-different evidence of success, and a platform that runs one pipeline for all of
-them has only really implemented the first.
+**A graph that changes shape while it runs.** Tasks are nodes with dependencies;
+independent ones execute concurrently. The planner injects the build stages it
+decided on, and the validation stage injects repairs — into a graph that is
+already executing. Every mutation is cycle-checked before it is accepted. That is
+the bit a fixed pipeline cannot express: a late step rewriting the plan for an
+earlier step and re-running it.
+
+**Agents never call each other.** They read and write typed keys on a shared
+blackboard, and every task declares which keys it reads and writes. The engine
+refuses to start a task whose inputs are missing, and fails one that did not
+write what it promised. Coordination becomes data you can inspect rather than a
+call chain you have to trace.
+
+**The thing that judges the work did not write it.** Validation runs no model at
+all. It parses the files on disk, diffs routes against the contract, and executes
+the generated suite in a subprocess. Findings that can describe their own fix
+carry a repair hint; those are the ones the engine acts on. The rest escalate.
+
+**Two separate limits on what an agent may do.** Approval decides *whether* a
+task runs — analysis is unattended, anything writing code is gated. The workspace
+sandbox decides *where* its output can land, rejecting absolute paths, parent
+traversal and symlink escapes. On top of both sits a list of operations no
+approval can authorise.
+
+**It refuses to guess.** "Build a scalable URL shortener" does not say at what
+scale. That ambiguity is named, marked blocking, and either answered by a human
+or resolved by a default that appears in the final report. Run with `--no-assume`
+and it stops rather than inventing an answer.
+
+## Six kinds of work
+
+Building a system, extending one, fixing it, restructuring it, testing it and
+documenting it are different jobs, and the graph differs accordingly.
 
 ```bash
-python -m asep url_shortener           # build a URL shortener from nothing
-python -m asep analytics_upgrade       # add a feature to a service that exists
-python -m asep fix_expiry_bug          # fix a real latent defect
-python -m asep extract_service_layer   # refactor without changing behaviour
-python -m asep raise_test_coverage     # put untested modules under test
-python -m asep document_the_service    # write the reference, ADRs and runbook
+python -m asep fix_expiry_bug           # or: url_shortener, analytics_upgrade,
+                                        # extract_service_layer, raise_test_coverage,
+                                        # document_the_service
 ```
-
-The graphs differ because the jobs differ:
 
 | Work | Shape of the run | What proves it worked |
 | --- | --- | --- |
-| **Build** | design → contract → build → test → docs → verify | the generated suite executes and passes |
-| **Enhancement** | impact analysis first, then design the addition | the change is additive; the old suite still passes |
-| **Bug fix** | no design stage; **reproduce before repairing** | the regression test failed first, then passed |
-| **Refactor** | no new tests — the old ones are the specification | the existing suite passes **unedited** |
-| **Test improvement** | no architecture, no contract | measured coverage went up; no source file changed |
-| **Documentation** | contract established so coverage is measurable | every published endpoint appears in a document |
-
-Each declares the check that makes its own kind of success measurable
-(`behaviour_preserved`, `test_coverage`, `documentation`), so the verdict fits
-the work instead of the work being bent to fit one verdict.
+| Build | design → contract → build → test → docs → verify | the generated suite executes and passes |
+| Enhancement | impact analysis first, then design the addition | change is additive; the old suite still passes |
+| Bug fix | no design stage; **reproduce before repairing** | the regression test failed first, then passed |
+| Refactor | no new tests — the old ones are the specification | the existing suite passes **unedited** |
+| Test improvement | no architecture, no contract | coverage measurably up; no source file touched |
+| Documentation | contract established so coverage is measurable | every published endpoint appears in a document |
 
 ### The bug fix is the one worth reading
 
-The defect is real and pre-existing, not planted. The read path is cache-aside
-and the expiry check sits only on the cache-miss branch, so once a link has been
-resolved once the cache answers on its behalf long after the link expired. The
-target's own 32 passing tests miss it, because their expiry test never resolves
-a link before it expires.
+The defect is real and pre-existing. The read path is cache-aside and the expiry
+check sits only on the cache-miss branch, so once a link has been resolved the
+cache keeps serving it long after it expired. The target's own 32 tests miss it,
+because their expiry test never resolves a link before it expires.
 
 ```
-  ok  T-010 wrote 1 file(s) — a regression test that resolves a link before it expires
-  ok  T-020 defect reproduced: 2 regression test(s) fail against the unfixed code
-  ??  T-030 needs approval (risk=medium)
-  ok  T-030 wrote 1 file(s) — cached entries now carry the link's expiry
-  ok  T-040 round 1: pass — 6 check(s), 0 error(s)
-  **  run succeeded — 35 passed, 0 failed
+ok  T-010 wrote a regression test that resolves a link before it expires
+ok  T-020 defect reproduced: 2 regression test(s) fail against the unfixed code
+ok  T-030 cached entries now carry the link's expiry
+**  run succeeded — 35 passed, 0 failed
 ```
 
-`T-020` is a graph node whose job is to **require a failure**. If the regression
-test passes against the unfixed code, the run stops: either the defect is not
-what was reported or the test does not exercise it, and both need a person. A
-bug-fix run that skips this can produce a test that was green all along, a fix
-that changed nothing, and a green final verdict — a sequence indistinguishable
-from success that contains no evidence of anything.
+`T-020` is a node whose job is to **require a failure**. If the regression test
+passes against the unfixed code, the run stops — either the defect is not what
+was reported or the test does not exercise it, and both need a person.
 
-### Brownfield work starts from a real codebase
+### Brownfield work reads the actual codebase
 
 Four of the six start from
 [`sample_codebase/url_shortener_legacy/`](sample_codebase/url_shortener_legacy/),
-a working service with 32 passing tests. Before anything is designed, a
-static-analysis stage parses that tree and computes what the change touches and
-what it might break:
+a working service with 32 passing tests. Before anything is designed, the AST is
+parsed to work out what the change touches:
 
 ```
-  ok  T-002 scanned 15 module(s) across 9 layer(s); 8 impacted, 1 API(s) affected,
-           blast radius 10 file(s), 7 data flow(s) run through changed code
+ok  T-002 scanned 15 module(s) across 9 layer(s); 5 matched the requirement,
+          2 reached through imports, 3 concept(s) have no home yet
 ```
 
-That answer comes from the AST, not from a model. Which modules import which is
-a fact, and a design built on a recollection of it sends the implementation
-stage after the wrong files — a mistake that only surfaces three steps later.
+That answer is derived, not recalled. Requirement vocabulary is matched against
+symbols, routes and tables, then propagated along the import graph in both
+directions — so a file nobody named, but which a changed file imports, still
+shows up as at risk. Every file it reports carries the reason it was selected.
+Ask it about caching instead of analytics and you get a different answer.
 
-It reports more than a file list. The layers, entry points and data flows are
-reconstructed from the import graph, and each flow is marked according to
-whether it passes through something the change touches:
+The original directory is never modified; each run works on a copy.
 
-| From | To | Direction | Touched |
-| --- | --- | --- | --- |
-| `app/api/routes.py` | `app/repository.py` | transport → persistence | **changed** |
-| `app/repository.py` | `app/db.py` | persistence → storage | **changed** |
-| `app/main.py` | `app/cache.py` | composition → cache | no |
+## Try to break it
 
-A file is safe or dangerous to modify depending on what runs through it, and
-that is a property of the architecture rather than of the file.
-
-The existing suite is the constraint every brownfield change is measured
-against, and it is still passing at the end of all four. The original directory
-is never modified: each run works on a copy.
-
-## How it works
-
-```
-requirement ──► architecture ──┐
-    │                          ├──► planner ──► [graph grows here]
-    └──────────► api design ───┘                      │
-                                                      ▼
-                          implementation ──► tests ───┬──► validation ──► summary
-                                   └──────► docs ─────┘        │
-                                                               ▼
-                                              repair ◄── findings with repair hints
-                                                 └──► re-validation
-```
-
-Five ideas do the work.
-
-**A mutable task graph, not a pipeline.** Tasks are nodes with dependencies.
-Independent nodes run concurrently. Crucially the graph can be *modified while it
-is executing* — the planner injects the build stages it decided on, and the
-validation stage injects repairs. Every mutation is checked for cycles before it
-is accepted, and rejected if it would create one. A fixed pipeline cannot express
-"a late step rewrites the plan for an earlier step and re-runs it", which is
-exactly what fixing a defect requires.
-
-**A blackboard, not a call chain.** Agents never call each other. They read and
-write typed keys in shared state. Coordination becomes inspectable data rather
-than an implicit chain of calls, and any agent can be run in isolation.
-
-**Declared contracts, enforced.** Every task declares the keys it reads and
-writes. The engine refuses to start a task whose inputs are absent, and fails a
-task that did not write what it promised. A planning mistake becomes an explicit
-error instead of an agent improvising around missing input.
-
-**Verification by something other than the author.** The validation stage runs no
-model at all. It parses the files on disk, compares routes against the contract,
-screens for forbidden operations, and executes the generated suite in a
-subprocess. An agent cannot talk its way past any of it. Findings that can
-describe their own fix carry a `repair_hint`, and those are the ones the engine
-can act on; findings that cannot are escalated to a human rather than looped on.
-
-**Bounded autonomy.** Two independent limits:
-
-| | |
-| --- | --- |
-| **Approval** decides *whether* work happens | Analysis runs unattended. Anything that writes code — implementation, repair — is gated. `--approve` puts a human on every gate; `--threshold` moves the line. |
-| **The workspace** decides *where* it can land | Every write goes through one object that rejects absolute paths, parent traversal, and anything resolving outside the root. |
-
-On top of both sits a list of operations no approval can authorise — `rm -rf /`,
-destructive DDL, `terraform destroy`, `kubectl delete`, piping curl into a shell.
-Content matching them never reaches disk.
-
-That last rule has teeth. The shipped migration originally carried a commented-out
-`DROP TABLE` rollback; the guardrail refused it, and the migration now describes
-its rollback in prose instead. Conversely, the `shutdown` pattern used to match
-the English word and refused a design document that said "flush on shutdown" —
-a guardrail that fires on documentation is a guardrail that gets switched off, so
-it was narrowed to the command form. Both cases are in the test suite.
-
-### Handling ambiguity
-
-"Build a scalable URL shortener with analytics" does not say what scale, whether
-creation is authenticated, or how long to keep click data. The requirement stage
-names each of these, decides which are blocking, and attaches an explicit default
-to the rest.
+The claim is that the generated suite passes. Check it without the platform:
 
 ```bash
-python -m asep url_shortener --no-assume
-#   ??  run halted: blocking ambiguities require a human answer
-#       AMB-001: What read and write volume must this sustain, and over what
-#                link corpus? (matters because it decides the storage engine and
-#                whether the cache is in-process or shared)
-
-python -m asep url_shortener --answer "AMB-001=5k redirects/sec over 200k links"
+python -m asep url_shortener
+cd runs/<run-id>/workspace && pytest -q       # 36 passed
 ```
 
-By default the recorded defaults are applied and the run continues — but every
-one of them appears in the run summary under *Assumptions this run made*, so a
-reviewer sees what was guessed. A default that is not written down is just a
-silent guess.
-
-## What is real and what is simulated
-
-Worth being precise about, because it is the first question a reader should ask.
-
-**Real.** The orchestration engine, the dependency graph and its mutation, the
-concurrency, the contract enforcement, retry classification, the approval gates,
-the workspace sandbox, the forbidden-operation screening, the static analysis of
-the brownfield codebase, all six validation checks, the repair loop, and the
-execution of the generated test suite. When the run says 36 tests passed, pytest
-ran in a subprocess and 36 tests passed.
-
-**Synthesised from the design.** `app/api/routes.py` is generated from the
-approved API contract, not stored. Remove an endpoint and its handler
-disappears; change a status code and the decorator changes; list the endpoints
-in any order and the generator still registers the catch-all last, because it
-sorts by path specificity rather than trusting the contract's ordering. It
-reproduces the hand-written module it replaced **byte for byte**, so generation
-cost nothing in quality.
-
-The modules behind that surface — storage, cache, the analytics writer — are
-library code. An HTTP contract says what the surface is, not how a short code is
-allocated or when a collision is retried. That split is how scaffolding tools
-actually work, and it is stated rather than blurred.
-
-It also makes the seeded defect *emergent*: the contract declares
-`GET /api/v1/analytics/{code}`, the operation library has no implementation for
-it, so the generator leaves it out and the contract check reports a real gap. An
-endpoint with no implementation is omitted rather than stubbed — a stub would
-satisfy the structural check while lying about working.
-
-**Deterministic.** The default `--mode mock` provider returns fixed content for
-the stages that are not synthesised. This is not a stub that
-returns empty objects — it answers with the same shape a competent model would,
-which is what makes the rest meaningful. It also deliberately gets one thing
-wrong: the implementation response omits an endpoint the contract requires.
-Nothing downstream special-cases that gap. A demo where everything succeeds on
-the first pass would hide the part of the system worth looking at.
-
-`--mode openai` swaps in a real model through the same `Provider` interface.
-Every model call in the system goes through one method that returns a validated
-Pydantic object or raises — agents never see raw text, so a malformed response is
-a typed failure the orchestrator retries with the validation error attached,
-rather than a parsing bug inside an agent.
+The claim that the checks mean something is harder to take on trust, so there is
+a test that attacks them. It takes a workspace that has already passed, breaks it
+in six ways the checks were never written against, and requires each to be
+caught:
 
 ```bash
-cp .env.example .env    # add OPENAI_API_KEY
-python -m asep url_shortener --mode openai --model gpt-4o-mini
+pytest -q tests/test_validation_is_independent.py
 ```
 
-## Output
+The useful case in there is changing a redirect from 302 to 301. It parses fine
+and satisfies the contract — only executing the suite finds it. That is why test
+execution is not optional for a trustworthy verdict.
 
-Each run writes a directory:
+## Where the model fits
+
+Every model call goes through one method that returns a validated Pydantic object
+or raises. Agents never see raw text, so a malformed response is a typed failure
+the orchestrator retries with the validation error attached, rather than a
+parsing bug inside an agent.
+
+The default provider is deterministic, which is what makes the whole thing
+runnable with no key and no network. It is not a stub returning empty objects —
+it answers with the shape a competent model would, so the orchestration,
+validation and repair all execute against real content.
+
+Two things are worth being precise about:
+
+- `app/api/routes.py` is **synthesised from the approved contract**. Remove an
+  endpoint and its handler disappears; change a status code and the decorator
+  follows; list the endpoints in any order and the catch-all is still registered
+  last, because the generator sorts by path specificity. It reproduces the
+  hand-written module it replaced byte for byte.
+- The modules behind that surface — storage, cache, the analytics writer — are
+  library code. A contract says `POST /api/v1/urls` returns 201 or 409, not how
+  to allocate a short code. That split is stated rather than blurred.
+
+A real model goes behind the same agents with `--mode openai`. The deterministic
+provider **refuses** a requirement it was not scripted for rather than answering
+it wrongly.
+
+## What a run leaves behind
 
 ```
 runs/<run-id>/
 ├── trace.jsonl              every event, flushed as it happens
-├── run.json                 tasks, artifacts, approvals, timings
+├── run.json                 tasks, artifacts, approvals, blackboard
 ├── graph.mmd                the final graph, including injected nodes
 ├── summary.md               the run, written for a reviewer
-├── metrics.json             derived run metrics, machine-readable
-├── metrics.md               the same, for a human
+├── metrics.json / .md       derived from the trace
 ├── validation-approach.md   the test strategy, and what each check cannot see
-├── validation-round-1.md    what failed, and which findings were repairable
-├── validation-round-2.md    what the repair actually fixed
+├── validation-round-N.md    what failed, and what the repair fixed
 └── workspace/               the deliverable
 ```
 
-`summary.md` is the reviewer-facing document: the implementation plan and why
-each task exists, an inventory of every artifact with the requirements it claims
-to cover, the decisions and what they cost, the open risks, the verification
-results, the assumptions the run made — and a **limitations** section assembled
-from what actually happened, so it does not read the same way whatever the
-outcome was.
+`summary.md` carries the plan and why each task exists, every artifact with the
+requirements it claims to cover, the decisions and their costs, the open risks,
+and a limitations section assembled from what actually happened — so it cannot
+read the same way regardless of outcome.
 
-`validation-approach.md` states the test strategy (which tests are unit, which
-are integration, what each exercises), what each check establishes, and — the
-part that matters — what each check *cannot* catch.
-
-`trace.jsonl` is flushed as events occur, so a run killed halfway still leaves a
-readable record of how far it got. The trace is the evidence that the system
-orchestrated rather than merely generated: every scheduling decision, approval,
-failure and graph mutation is replayable without re-running a model.
+`first_pass_yield` in the metrics is the number to watch across runs: did the run
+reach a passing verdict without repairing itself? It moves before pass/fail does,
+because the repair loop is good enough to rescue a mediocre run.
 
 ## Command line
 
 ```bash
 python -m asep --list                        # scenarios and what they do
-python -m asep url_shortener                 # greenfield
-python -m asep analytics_upgrade             # brownfield
 python -m asep url_shortener --approve       # decide every gated task yourself
-python -m asep url_shortener --threshold low # gate everything, including analysis
 python -m asep url_shortener --no-assume     # refuse to guess; halt and ask
-python -m asep url_shortener --json          # trace as JSON lines, for piping
-python -m asep url_shortener --no-tests      # skip executing the generated suite
-python -m asep url_shortener --inject-failure implementation   # watch it retry and recover
-python -m asep url_shortener --resume <run-id> --answer 'AMB-001=...'  # continue a halted run
+python -m asep url_shortener --resume <id> --answer 'AMB-001=...'
+python -m asep url_shortener --inject-failure implementation   # watch it recover
+python -m asep url_shortener --json          # trace as JSON lines
 ```
-
-## Further reading
-
-- [`docs/walkthrough.md`](docs/walkthrough.md) — **start here**: one requirement
-  traced through every stage, with real artifacts from a committed run
-- [`docs/architecture.md`](docs/architecture.md) — components, execution model,
-  control flow, and the key design decisions with what each one costs
-- [`docs/orchestration.md`](docs/orchestration.md) — the execution loop, the
-  blackboard keys, the error taxonomy, and how the repair loop rewires the graph
-- [`docs/testing.md`](docs/testing.md) — how correctness is established, and the
-  known limitations and trade-offs
-- [`docs/extending.md`](docs/extending.md) — adding a check, an agent, a scenario
-  or a provider
-- [`examples/`](examples/) — three committed runs: greenfield, brownfield, and an
-  ambiguous requirement that halts
-- [`docs/operations.md`](docs/operations.md) — DevOps and SRE posture, the run
-  metrics worth watching, and why AIOps is deliberately not claimed
-- [`CONTRIBUTING.md`](CONTRIBUTING.md) — branching, commits, and what CI enforces
 
 ## Layout
 
 ```
 asep/
-├── models/          typed domain: requirements, design, tasks, artifacts, findings
 ├── orchestration/   the engine, the graph, the policy layer, the trace recorder
 ├── agents/          twelve narrow agents, each with one job
-├── validation/      six default checks plus three the scenarios opt into
-├── providers/       the Provider interface, the OpenAI and deterministic backends
-│   └── scripts/     deterministic content, one module per kind of work
-├── tools/           workspace sandbox, AST scanner, subprocess test runner
-└── scenarios/       the opening task graphs; everything else is injected at runtime
+├── validation/      six checks by default, three more a scenario can opt into
+├── models/          typed domain: requirements, design, tasks, artifacts, findings
+├── providers/       the Provider interface; OpenAI and deterministic backends
+├── tools/           workspace sandbox, AST scanner, impact analysis, test runner
+└── scenarios/       six kinds of work; only the opening graph is declared
 
-sample_codebase/     the brownfield target: a working service, 32 passing tests,
-                     and one real latent defect
-examples/            a committed run record
-scripts/             regenerates the brownfield sample from the blueprint
-tests/               287 tests, 96% coverage of asep/
+sample_codebase/     the brownfield target, with one real latent defect
+examples/            three committed runs: greenfield, brownfield, ambiguous
+tests/               328 tests, 96% coverage of asep/
 ```
 
-## Tests
+## Running the tests
 
 ```bash
-pytest -q                      # everything, ~150s
+pytest -q                      # everything, ~3 minutes
 pytest -q -m "not slow"        # ~9s, for the edit-run loop
-pytest -q -m "not slow"        # unit only, ~5s
 ruff check asep tests scripts
 ```
 
-96% line coverage of `asep/` — `coverage run --source=asep -m pytest && coverage report`.
-
-The slow ones are the end-to-end runs, and they are slow because they are real:
-each executes the generated suite in a subprocess. They assert on the shape of
-the run — what was gated, what failed first, what repaired it — rather than on
-generated prose.
-
-Several tests exist because they caught something. `importers_of` silently
-matched nothing for `from .module import Symbol`, which is how most of a Python
-codebase imports, so every dependency edge in the brownfield impact analysis was
-empty. The concern map was keyed on a label rather than a module name, so the
-redirect handler — the one file on the latency-critical path — was never flagged
-as impacted. Both are pinned now.
+`slow` means "executes a whole orchestration run", which includes running the
+generated suite in a subprocess. CI runs all of it on Ubuntu and Windows across
+Python 3.10 and 3.12, plus a 90% coverage gate, a dependency audit, and all six
+scenarios end to end.
 
 ## Limits
 
-Worth stating plainly, since a system that only describes what works is not
-useful to whoever inherits it.
-
 - **The generated service is a prototype.** sqlite3 will not sustain the
   throughput its own architecture document targets; the repository interface is
-  the seam where Postgres replaces it. That trade-off, and the cost it accepts,
-  is recorded in the generated ADR rather than hidden.
+  the seam where Postgres replaces it. That trade-off and its cost are recorded
+  in the generated ADR rather than hidden.
 - **The repair loop closes a narrow class of defects** — findings specific enough
-  to describe their own fix. Anything else escalates, which is correct, but it
-  means the loop is not a general bug fixer.
-- **`test_coverage` counts imports, not lines.** It answers "does anything test
-  this module at all", which is the useful signal when the answer is no. It is
-  not a substitute for a coverage tool.
-- **`behaviour_preserved` compares file digests.** It catches an edited or
-  deleted test, not a test weakened in a way that leaves the bytes the same
-  length — nothing does, short of running the old suite against the new code.
-- **The impact-analysis concern map is domain-specific.** It knows what a click
-  analytics feature touches. A different change needs a different map, or a model
-  call to build one.
-- **Static route matching is name-based.** It does not resolve the Python import
-  system, so two modules with the same basename in different packages are not
-  told apart.
-- **Approval is per-task, not per-diff.** A reviewer approves that
-  implementation may run, not the specific lines it will write.
-- **Impact analysis is a heuristic**, not a semantic understanding of the change.
-  It matches requirement vocabulary against symbols, routes and tables, then
-  propagates along the import graph. Every file it lists says why it is there,
+  to describe their own fix. Everything else escalates, which is correct, but it
+  is not a general bug fixer.
+- **Impact analysis is a lexical heuristic**, not comprehension. It matches
+  requirement vocabulary against the import graph. Every file it lists says why,
   so a wrong answer is visible rather than silent.
+- **Static route matching is name-based.** It does not resolve the Python import
+  system, so two modules sharing a basename are not told apart.
+- **Approval is per-task, not per-diff.** A reviewer approves that implementation
+  may run, not the lines it will write.
+
+## Further reading
+
+- [`docs/walkthrough.md`](docs/walkthrough.md) — one requirement traced through
+  every stage, citing the artifacts a committed run produced
+- [`docs/architecture.md`](docs/architecture.md) — components, execution model,
+  and the design decisions with what each one costs
+- [`docs/orchestration.md`](docs/orchestration.md) — the execution loop, the
+  blackboard, the error taxonomy, how the repair loop rewires the graph
+- [`docs/testing.md`](docs/testing.md) — how correctness is established, and where
+  that evidence stops
+- [`docs/operations.md`](docs/operations.md) — the DevOps and SRE posture
+- [`docs/extending.md`](docs/extending.md) — adding a check, an agent, a scenario
+  or a provider
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) — branching, commits, what CI enforces
