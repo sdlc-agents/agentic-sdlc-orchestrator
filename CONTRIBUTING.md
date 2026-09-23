@@ -85,6 +85,7 @@ what the matrix is for — one such bug has already shipped and been caught ther
 | Job | Gate |
 | --- | --- |
 | `lint` | ruff clean |
+| `security` | `pip-audit` finds no known vulnerability |
 | `test` (×4) | full suite on Ubuntu + Windows, Python 3.10 + 3.12 |
 | `coverage` | ≥ 90% of `asep/`, enforced not reported |
 | `scenarios` | all six scenarios exit zero; sample codebase and examples regenerate byte-identically |

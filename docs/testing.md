@@ -36,6 +36,7 @@ mislabelling them once turned the fast loop into a 30-second one.
 | `test_openai_provider.py` | The live-model path — prompt construction, schema round-tripping for every agent, and failure classification — without a key or a network |
 | `test_impact_derivation.py` | Impact analysis answers differently for different requirements — the test that stops it being re-hard-coded |
 | `test_resume.py` | A halted run continues without repeating work; the blackboard rehydrates as models |
+| `test_metrics.py` | Derived run metrics agree with the trace they came from |
 | `test_validation_is_independent.py` | **The checks are not decoration** |
 
 ### The one that matters most
