@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import shutil
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 
 from ..orchestration.errors import GuardrailViolation
 
@@ -19,11 +19,21 @@ class Workspace:
         self.root.mkdir(parents=True, exist_ok=True)
 
     def resolve(self, relative: str) -> Path:
-        candidate = Path(relative)
-        if candidate.is_absolute() or candidate.drive or relative.startswith(("/", "\\")):
+        # Judge the path under both conventions. `Path` follows the host OS, so
+        # on Linux "C:/Windows/x" is just a directory called "C:" and a
+        # Windows-style path would be accepted; on Windows a backslash path
+        # splits but on Linux it does not. A guard that depends on the host is
+        # not a guard — the same generated path must be refused everywhere.
+        posix = PurePosixPath(relative)
+        windows = PureWindowsPath(relative)
+
+        if posix.is_absolute() or windows.is_absolute() or windows.drive or windows.root:
             raise GuardrailViolation(f"absolute path rejected: {relative}")
-        if ".." in candidate.parts:
+        if ".." in posix.parts or ".." in windows.parts:
             raise GuardrailViolation(f"parent traversal rejected: {relative}")
+
+        # Normalise separators so a path means the same thing on either host.
+        candidate = Path(*PurePosixPath(relative.replace("\\", "/")).parts)
 
         target = (self.root / candidate).resolve()
         try:
