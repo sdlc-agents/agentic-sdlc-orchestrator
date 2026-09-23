@@ -375,6 +375,7 @@ python -m asep url_shortener --resume <run-id> --answer 'AMB-001=...'  # continu
   or a provider
 - [`examples/`](examples/) — three committed runs: greenfield, brownfield, and an
   ambiguous requirement that halts
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) — branching, commits, and what CI enforces
 
 ## Layout
 
