@@ -297,8 +297,27 @@ the brownfield codebase, all six validation checks, the repair loop, and the
 execution of the generated test suite. When the run says 36 tests passed, pytest
 ran in a subprocess and 36 tests passed.
 
-**Deterministic.** The default `--mode mock` provider returns fixed, high-quality
-content for each agent instead of calling a model. This is not a stub that
+**Synthesised from the design.** `app/api/routes.py` is generated from the
+approved API contract, not stored. Remove an endpoint and its handler
+disappears; change a status code and the decorator changes; list the endpoints
+in any order and the generator still registers the catch-all last, because it
+sorts by path specificity rather than trusting the contract's ordering. It
+reproduces the hand-written module it replaced **byte for byte**, so generation
+cost nothing in quality.
+
+The modules behind that surface — storage, cache, the analytics writer — are
+library code. An HTTP contract says what the surface is, not how a short code is
+allocated or when a collision is retried. That split is how scaffolding tools
+actually work, and it is stated rather than blurred.
+
+It also makes the seeded defect *emergent*: the contract declares
+`GET /api/v1/analytics/{code}`, the operation library has no implementation for
+it, so the generator leaves it out and the contract check reports a real gap. An
+endpoint with no implementation is omitted rather than stubbed — a stub would
+satisfy the structural check while lying about working.
+
+**Deterministic.** The default `--mode mock` provider returns fixed content for
+the stages that are not synthesised. This is not a stub that
 returns empty objects — it answers with the same shape a competent model would,
 which is what makes the rest meaningful. It also deliberately gets one thing
 wrong: the implementation response omits an endpoint the contract requires.

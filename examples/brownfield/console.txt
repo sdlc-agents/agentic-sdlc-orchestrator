@@ -1,6 +1,6 @@
 $ python -m asep analytics_upgrade
 
-  **  run 879f1abc (mock mode, 5 tasks)
+  **  run 4e39b20d (mock mode, 5 tasks)
   ok  T-001 normalized into 4 functional and 3 non-functional requirements; 2 ambiguity(ies), 2 resolved
         wrote: requirement
         artifacts: docs/requirements.md
@@ -61,11 +61,11 @@ $ python -m asep analytics_upgrade
   ok  T-050 summarized 12 task(s), 21 artifact(s), 2 open risk(s)
         wrote: run_summary
         artifacts: summary.md
-  **  run succeeded in 10209ms
+  **  run succeeded in 9857ms
 
 ========================================================================
   Brownfield — add click analytics to an existing service
-  run 879f1abc  |  provider mock:deterministic-blueprint  |  10209ms
+  run 4e39b20d  |  provider mock:deterministic-blueprint  |  9857ms
 ========================================================================
 
   tasks
@@ -86,14 +86,14 @@ $ python -m asep analytics_upgrade
     guardrails           pass   no forbidden operations found
     api_contract         pass   1/1 declared endpoints implemented
     traceability         pass   3/3 must-have requirements covered
-    tests                pass   36 passed, 0 failed, 0 skipped in 4499ms
+    tests                pass   36 passed, 0 failed, 0 skipped in 4176ms
 
   approvals
     T-010        approved   by auto-approve
     T-900-R1     approved   by auto-approve
 
   status:    succeeded
-  workspace: <project>\examples\brownfield\_run\879f1abc\workspace
-  run dir:   <project>\examples\brownfield\_run\879f1abc
-  trace:     <project>\examples\brownfield\_run\879f1abc\trace.jsonl  (40 events)
+  workspace: <project>\examples\brownfield\_run\4e39b20d\workspace
+  run dir:   <project>\examples\brownfield\_run\4e39b20d
+  trace:     <project>\examples\brownfield\_run\4e39b20d\trace.jsonl  (40 events)
 

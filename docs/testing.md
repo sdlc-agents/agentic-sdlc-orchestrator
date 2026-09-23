@@ -37,6 +37,7 @@ mislabelling them once turned the fast loop into a 30-second one.
 | `test_impact_derivation.py` | Impact analysis answers differently for different requirements — the test that stops it being re-hard-coded |
 | `test_resume.py` | A halted run continues without repeating work; the blackboard rehydrates as models |
 | `test_metrics.py` | Derived run metrics agree with the trace they came from |
+| `test_codegen.py` | The HTTP layer responds to the contract: remove an endpoint and its handler goes, and the catch-all is ordered last however the contract lists it |
 | `test_validation_is_independent.py` | **The checks are not decoration** |
 
 ### The one that matters most

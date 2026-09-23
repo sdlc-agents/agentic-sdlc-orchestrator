@@ -1,6 +1,6 @@
 $ python -m asep url_shortener
 
-  **  run 7f194be3 (mock mode, 4 tasks)
+  **  run d8fce4fe (mock mode, 4 tasks)
   ok  T-001 normalized into 7 functional and 5 non-functional requirements; 3 ambiguity(ies), 3 resolved
         wrote: requirement
         artifacts: docs/requirements.md
@@ -59,11 +59,11 @@ $ python -m asep url_shortener
   ok  T-050 summarized 11 task(s), 27 artifact(s), 3 open risk(s)
         wrote: run_summary
         artifacts: summary.md
-  **  run succeeded in 10796ms
+  **  run succeeded in 9423ms
 
 ========================================================================
   Greenfield — build a URL shortener
-  run 7f194be3  |  provider mock:deterministic-blueprint  |  10796ms
+  run d8fce4fe  |  provider mock:deterministic-blueprint  |  9423ms
 ========================================================================
 
   tasks
@@ -84,14 +84,14 @@ $ python -m asep url_shortener
     guardrails           pass   no forbidden operations found
     api_contract         pass   7/7 declared endpoints implemented
     traceability         pass   4/4 must-have requirements covered
-    tests                pass   36 passed, 0 failed, 0 skipped in 4426ms
+    tests                pass   36 passed, 0 failed, 0 skipped in 4471ms
 
   approvals
     T-010        approved   by auto-approve
     T-900-R1     approved   by auto-approve
 
   status:    succeeded
-  workspace: <project>\examples\greenfield\_run\7f194be3\workspace
-  run dir:   <project>\examples\greenfield\_run\7f194be3
-  trace:     <project>\examples\greenfield\_run\7f194be3\trace.jsonl  (38 events)
+  workspace: <project>\examples\greenfield\_run\d8fce4fe\workspace
+  run dir:   <project>\examples\greenfield\_run\d8fce4fe
+  trace:     <project>\examples\greenfield\_run\d8fce4fe\trace.jsonl  (38 events)
 

@@ -42,14 +42,27 @@ class TestResponseModules:
         kinds = [s.work for s in SCENARIOS.values()]
         assert len(kinds) == len(set(kinds)), "two scenarios claiming one work kind"
 
+    # Shared machinery rather than a response for one kind of work. Listed
+    # explicitly so a genuinely orphaned module is still caught.
+    HELPERS = {"__init__", "codegen"}
+
     def test_module_files_match_the_registry(self):
         on_disk = {
             p.stem
             for p in (PACKAGE / "providers" / "responses").glob("*.py")
-            if p.stem != "__init__"
+            if p.stem not in self.HELPERS
         }
         declared = {s.work for s in SCENARIOS.values()}
         assert on_disk == declared, "a response module nothing routes to, or vice versa"
+
+    def test_helpers_are_imported_by_the_responses_that_use_them(self):
+        """A helper nothing imports is dead weight, not shared machinery."""
+        bodies = "\n".join(
+            p.read_text(encoding="utf-8")
+            for p in (PACKAGE / "providers" / "responses").glob("*.py")
+        )
+        for helper in self.HELPERS - {"__init__"}:
+            assert f"import {helper}" in bodies, f"{helper}.py is imported by nothing"
 
 
 class TestAgentModules:
