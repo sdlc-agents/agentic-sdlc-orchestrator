@@ -326,6 +326,8 @@ runs/<run-id>/
 ├── run.json                 tasks, artifacts, approvals, timings
 ├── graph.mmd                the final graph, including injected nodes
 ├── summary.md               the run, written for a reviewer
+├── metrics.json             derived run metrics, machine-readable
+├── metrics.md               the same, for a human
 ├── validation-approach.md   the test strategy, and what each check cannot see
 ├── validation-round-1.md    what failed, and which findings were repairable
 ├── validation-round-2.md    what the repair actually fixed
@@ -375,6 +377,8 @@ python -m asep url_shortener --resume <run-id> --answer 'AMB-001=...'  # continu
   or a provider
 - [`examples/`](examples/) — three committed runs: greenfield, brownfield, and an
   ambiguous requirement that halts
+- [`docs/operations.md`](docs/operations.md) — DevOps and SRE posture, the run
+  metrics worth watching, and why AIOps is deliberately not claimed
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — branching, commits, and what CI enforces
 
 ## Layout

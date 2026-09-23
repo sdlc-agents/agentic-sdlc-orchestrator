@@ -4,9 +4,9 @@
 
 | Check | Status | Detail | Time |
 | --- | --- | --- | --- |
-| structure | pass | 3/3 required paths present | 1ms |
-| syntax | pass | parsed 16 python file(s) | 14ms |
-| guardrails | pass | no forbidden operations found | 20ms |
-| api_contract | pass | 1/1 declared endpoints implemented | 18ms |
+| structure | pass | 3/3 required paths present | 2ms |
+| syntax | pass | parsed 16 python file(s) | 33ms |
+| guardrails | pass | no forbidden operations found | 50ms |
+| api_contract | pass | 1/1 declared endpoints implemented | 42ms |
 | traceability | pass | 3/3 must-have requirements covered | 0ms |
-| tests | pass | 36 passed, 0 failed, 0 skipped in 3944ms | 3945ms |
+| tests | pass | 36 passed, 0 failed, 0 skipped in 4499ms | 4502ms |
