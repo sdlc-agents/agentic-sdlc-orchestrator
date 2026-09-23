@@ -30,6 +30,7 @@ from ...models import (
     TradeOff,
 )
 from ..blueprints import url_shortener as bp
+from . import codegen
 
 if TYPE_CHECKING:  # pragma: no cover - typing only
     from ..base import GenerationRequest
@@ -563,7 +564,20 @@ def _plan(scenario: str) -> WorkPlan:
 
 
 def _greenfield_code() -> CodeBundle:
-    """The implementation response. Note what is missing: see the module docstring."""
+    """The implementation response.
+
+    `app/api/routes.py` is synthesised from the approved contract rather than
+    stored: change an endpoint and the emitted module changes with it. The
+    modules behind it — storage, cache, the analytics writer — are library
+    code, because an HTTP contract says what the surface is, not how a short
+    code is allocated.
+
+    The missing analytics route is a consequence of that split rather than a
+    hand-written omission: the contract declares the endpoint, `OPERATIONS` has
+    no implementation for it, so the generator leaves it out and the contract
+    check reports it.
+    """
+    generated = codegen.render_routes(api_contract())
     files = [
         GeneratedFile(
             path=path,
@@ -578,7 +592,9 @@ def _greenfield_code() -> CodeBundle:
             language="sql" if path.endswith(".sql") else "python",
             covers=_covers_for(path),
         )
-        for path, content in bp.FILES.items()
+        for path, content in (
+            {**bp.FILES, "app/api/routes.py": generated}
+        ).items()
         # openapi.yaml is derived from the contract by the api_design agent and
         # README.md belongs to documentation; neither is implementation output.
         if path not in {"openapi.yaml", "README.md"}
@@ -591,8 +607,12 @@ def _greenfield_code() -> CodeBundle:
         ),
         files=files,
         notes=[
-            "The catch-all /{code} route is registered last so it cannot shadow "
-            "/healthz or /api/*.",
+            "The HTTP layer is generated from the approved contract; the modules "
+            "behind it are library code, since a contract defines the surface "
+            "rather than the behaviour.",
+            "The catch-all /{code} route is registered last because the generator "
+            "orders by path specificity, not because the contract happened to "
+            "list it last.",
             "Analytics recording is enqueued, never awaited, so a slow write cannot "
             "delay a redirect.",
         ],

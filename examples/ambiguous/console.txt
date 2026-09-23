@@ -1,13 +1,13 @@
 $ python -m asep url_shortener --no-assume
 
-  **  run fdf173b1 (mock mode, 4 tasks)
+  **  run d4a72562 (mock mode, 4 tasks)
   ??  run halted: blocking ambiguities require a human answer
         questions: AMB-001: What read and write volume must this sustain, and over what link corpus? (matters because It decides the storage engine and whether the cache is in-process or shared. Getting it wrong is a rewrite, not a tuning exercise.)
-  **  run needs_clarification in 20ms
+  **  run needs_clarification in 19ms
 
 ========================================================================
   Greenfield — build a URL shortener
-  run fdf173b1  |  provider mock:deterministic-blueprint  |  20ms
+  run d4a72562  |  provider mock:deterministic-blueprint  |  19ms
 ========================================================================
 
   tasks
@@ -17,9 +17,9 @@ $ python -m asep url_shortener --no-assume
     total lines          0
 
   status:    needs_clarification
-  workspace: <project>\examples\ambiguous\_run\fdf173b1\workspace
-  run dir:   <project>\examples\ambiguous\_run\fdf173b1
-  trace:     <project>\examples\ambiguous\_run\fdf173b1\trace.jsonl  (4 events)
+  workspace: <project>\examples\ambiguous\_run\d4a72562\workspace
+  run dir:   <project>\examples\ambiguous\_run\d4a72562
+  trace:     <project>\examples\ambiguous\_run\d4a72562\trace.jsonl  (4 events)
 
   The run stopped because it will not guess. Answer and re-run:
     - AMB-001: What read and write volume must this sustain, and over what link corpus? (matters because It decides the storage engine and whether the cache is in-process or shared. Getting it wrong is a rewrite, not a tuning exercise.)

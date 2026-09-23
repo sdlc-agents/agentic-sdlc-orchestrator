@@ -1,8 +1,8 @@
 {
-  "run_id": "7f194be3",
+  "run_id": "d8fce4fe",
   "scenario": "url_shortener",
   "status": "succeeded",
-  "duration_ms": 10796,
+  "duration_ms": 9423,
   "first_pass_yield": false,
   "tasks": {
     "planned": 9,
@@ -41,32 +41,32 @@
       "succeeded": 1,
       "failed": 0,
       "retries": 0,
-      "total_ms": 3,
-      "mean_ms": 3
+      "total_ms": 2,
+      "mean_ms": 2
     },
     "architecture": {
       "invocations": 1,
       "succeeded": 1,
       "failed": 0,
       "retries": 0,
-      "total_ms": 5,
-      "mean_ms": 5
+      "total_ms": 3,
+      "mean_ms": 3
     },
     "documentation": {
       "invocations": 1,
       "succeeded": 1,
       "failed": 0,
       "retries": 0,
-      "total_ms": 4,
-      "mean_ms": 4
+      "total_ms": 7,
+      "mean_ms": 7
     },
     "implementation": {
       "invocations": 1,
       "succeeded": 1,
       "failed": 0,
       "retries": 0,
-      "total_ms": 26,
-      "mean_ms": 26
+      "total_ms": 20,
+      "mean_ms": 20
     },
     "planner": {
       "invocations": 1,
@@ -81,8 +81,8 @@
       "succeeded": 1,
       "failed": 0,
       "retries": 0,
-      "total_ms": 8,
-      "mean_ms": 8
+      "total_ms": 9,
+      "mean_ms": 9
     },
     "requirement": {
       "invocations": 1,
@@ -105,16 +105,16 @@
       "succeeded": 1,
       "failed": 0,
       "retries": 0,
-      "total_ms": 10,
-      "mean_ms": 10
+      "total_ms": 12,
+      "mean_ms": 12
     },
     "validation": {
       "invocations": 2,
       "succeeded": 2,
       "failed": 0,
       "retries": 0,
-      "total_ms": 10699,
-      "mean_ms": 5349
+      "total_ms": 9339,
+      "mean_ms": 4669
     }
   }
 }
