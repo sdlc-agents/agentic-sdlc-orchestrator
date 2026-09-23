@@ -1,0 +1,99 @@
+$ python -m asep analytics_upgrade
+
+  **  run 94d99c01 (mock mode, 5 tasks)
+  ok  T-001 normalized into 4 functional and 3 non-functional requirements; 2 ambiguity(ies), 2 resolved
+        wrote: requirement
+        artifacts: docs/requirements.md
+  ok  T-002 scanned 15 module(s) across 9 layer(s); 6 matched the requirement, 1 reached through imports, 3 concept(s) have no home yet; 6 API(s) affected
+        wrote: codebase_summary
+        wrote: impact_analysis
+        artifacts: docs/impact-analysis.md
+  ok  T-003 Additive extension of the existing modular monolith: 3 component(s), 2 trade-off(s), 3 risk(s)
+        wrote: architecture
+        artifacts: docs/architecture.md
+  ok  T-004 1 endpoint(s) v1.1.0: GET /api/v1/analytics/{code}
+        wrote: api_contract
+        artifacts: openapi.yaml
+  ok  T-005 planned 5 task(s) for injection; T-020 + T-030 can run concurrently
+        wrote: work_plan
+        artifacts: docs/plan.md
+  ??  T-010 needs approval (risk=medium)
+  ok  T-010 approved by auto-approve
+  ok  T-010 wrote 9 file(s), 585 lines — Added a click_events table, a ClickRepository, a queue-backed AnalyticsRecorder started by the application lifespan, and a single non-blocking enqueue on the existing redirect path.
+        wrote: artifacts_index
+        wrote: implementation_summary
+        artifacts: app/config.py
+        artifacts: app/models.py
+        artifacts: app/db.py
+        artifacts: app/repository.py
+        artifacts: app/schemas.py
+        artifacts: app/analytics.py
+        artifacts: ... and 3 more
+  ok  T-020 wrote 2 file(s), 88 lines — Added analytics coverage and extended the existing fixtures with a short flush interval so recording is observable within a test.
+        wrote: test_suite_index
+        artifacts: tests/conftest.py
+        artifacts: tests/test_analytics.py
+  ok  T-030 wrote 2 file(s), 71 lines — Wrote the ADR for the analytics write path and the project README.
+        wrote: documentation_index
+        artifacts: docs/adr/001-analytics-off-the-redirect-path.md
+        artifacts: README.md
+  ok  T-040 round 1: fail — 6 check(s), 3 error(s), 0 warning(s); failed: api_contract, tests
+        wrote: validation_report
+        wrote: validation_rounds
+        artifacts: validation-round-1.md
+        artifacts: validation-approach.md
+  !!  validation round 1 found 3 error(s); 1 are machine-repairable
+        findings: contract declares GET /api/v1/analytics/{code} (Click analytics for a short link) but no route implements it
+        findings: failing test: tests/test_analytics.py::test_clicks_are_counted
+        findings: failing test: tests/test_analytics.py::test_referrers_are_attributed
+  ++  injected T-900-R1 and T-901-R1 into the running graph; moved T-050 behind T-901-R1
+  ??  T-900-R1 needs approval (risk=medium)
+  ok  T-900-R1 approved by auto-approve
+  ok  T-900-R1 applied 2 edit(s) across 1 file(s) for 1 finding(s) — Added the analytics route the contract declares, and imported the response model it returns.
+        wrote: artifacts_index
+        wrote: repair_summary
+        artifacts: app/api/routes.py
+  ok  T-901-R1 round 2: pass — 6 check(s), 0 error(s), 0 warning(s)
+        wrote: validation_report
+        wrote: validation_rounds
+        artifacts: validation-round-2.md
+  ok  validation passed after 1 repair round(s) (6 checks, 0 warning(s))
+  ok  T-050 summarized 12 task(s), 21 artifact(s), 2 open risk(s)
+        wrote: run_summary
+        artifacts: summary.md
+  **  run succeeded in 8471ms
+
+========================================================================
+  Brownfield — add click analytics to an existing service
+  run 94d99c01  |  provider mock:deterministic-blueprint  |  8471ms
+========================================================================
+
+  tasks
+    succeeded            12
+
+  artifacts
+    api_spec             1
+    code                 8
+    doc                  6
+    migration            1
+    report               4
+    test                 2
+    total lines          1246
+
+  validation: pass after 2 round(s)
+    structure            pass   3/3 required paths present
+    syntax               pass   parsed 16 python file(s)
+    guardrails           pass   no forbidden operations found
+    api_contract         pass   1/1 declared endpoints implemented
+    traceability         pass   3/3 must-have requirements covered
+    tests                pass   36 passed, 0 failed, 0 skipped in 3944ms
+
+  approvals
+    T-010        approved   by auto-approve
+    T-900-R1     approved   by auto-approve
+
+  status:    succeeded
+  workspace: <project>\examples\brownfield\_run\94d99c01\workspace
+  run dir:   <project>\examples\brownfield\_run\94d99c01
+  trace:     <project>\examples\brownfield\_run\94d99c01\trace.jsonl  (40 events)
+

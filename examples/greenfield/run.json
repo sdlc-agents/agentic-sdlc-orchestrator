@@ -1,0 +1,2082 @@
+{
+  "run_id": "48f8a9ca",
+  "requirement": "Build a scalable URL shortener service with APIs, persistence, and analytics.",
+  "scenario": "url_shortener",
+  "mode": "mock",
+  "status": "succeeded",
+  "started_at": 1790137302.5681622,
+  "finished_at": 1790137310.59006,
+  "tasks": {
+    "T-001": {
+      "id": "T-001",
+      "title": "Normalize the requirement and surface what it does not say",
+      "agent": "requirement",
+      "depends_on": [],
+      "covers": [],
+      "reads": [],
+      "writes": [
+        "requirement"
+      ],
+      "risk": "low",
+      "rationale": "Everything downstream traces to the ids this task assigns",
+      "status": "succeeded",
+      "attempts": 1,
+      "max_attempts": 2,
+      "origin": "plan",
+      "error": null,
+      "duration_ms": 1,
+      "artifact_ids": [
+        "docs/requirements.md"
+      ]
+    },
+    "T-002": {
+      "id": "T-002",
+      "title": "Design the system and record what each decision costs",
+      "agent": "architecture",
+      "depends_on": [
+        "T-001"
+      ],
+      "covers": [],
+      "reads": [
+        "requirement"
+      ],
+      "writes": [
+        "architecture"
+      ],
+      "risk": "low",
+      "rationale": "Independent of the API contract, so the two are designed concurrently",
+      "status": "succeeded",
+      "attempts": 1,
+      "max_attempts": 2,
+      "origin": "plan",
+      "error": null,
+      "duration_ms": 2,
+      "artifact_ids": [
+        "docs/architecture.md"
+      ]
+    },
+    "T-003": {
+      "id": "T-003",
+      "title": "Define the HTTP contract",
+      "agent": "api_design",
+      "depends_on": [
+        "T-001"
+      ],
+      "covers": [],
+      "reads": [
+        "requirement"
+      ],
+      "writes": [
+        "api_contract"
+      ],
+      "risk": "low",
+      "rationale": "Derived from the requirements, not from the architecture; validation later holds the implementation to it",
+      "status": "succeeded",
+      "attempts": 1,
+      "max_attempts": 2,
+      "origin": "plan",
+      "error": null,
+      "duration_ms": 2,
+      "artifact_ids": [
+        "openapi.yaml"
+      ]
+    },
+    "T-004": {
+      "id": "T-004",
+      "title": "Plan the build and inject it into the running graph",
+      "agent": "planner",
+      "depends_on": [
+        "T-002",
+        "T-003"
+      ],
+      "covers": [],
+      "reads": [
+        "requirement",
+        "architecture",
+        "api_contract"
+      ],
+      "writes": [
+        "work_plan"
+      ],
+      "risk": "low",
+      "rationale": "Needs both the design and the contract before it can decompose work",
+      "status": "succeeded",
+      "attempts": 1,
+      "max_attempts": 2,
+      "origin": "plan",
+      "error": null,
+      "duration_ms": 1,
+      "artifact_ids": [
+        "docs/plan.md"
+      ]
+    },
+    "T-010": {
+      "id": "T-010",
+      "title": "Implement the service from the architecture and contract",
+      "agent": "implementation",
+      "depends_on": [
+        "T-004"
+      ],
+      "covers": [
+        "FR-001",
+        "FR-002",
+        "FR-003"
+      ],
+      "reads": [
+        "api_contract",
+        "architecture"
+      ],
+      "writes": [
+        "artifacts_index",
+        "implementation_summary"
+      ],
+      "risk": "medium",
+      "rationale": "Writes source into the workspace, so it is gated for human approval",
+      "status": "succeeded",
+      "attempts": 1,
+      "max_attempts": 2,
+      "origin": "plan",
+      "error": null,
+      "duration_ms": 13,
+      "artifact_ids": [
+        "app/__init__.py",
+        "app/config.py",
+        "app/models.py",
+        "app/db.py",
+        "app/shortcode.py",
+        "app/cache.py",
+        "app/repository.py",
+        "app/analytics.py",
+        "app/schemas.py",
+        "app/api/__init__.py",
+        "app/api/routes.py",
+        "app/main.py",
+        "migrations/001_init.sql",
+        "requirements.txt"
+      ]
+    },
+    "T-020": {
+      "id": "T-020",
+      "title": "Generate an executable test suite from the contract",
+      "agent": "test",
+      "depends_on": [
+        "T-010"
+      ],
+      "covers": [
+        "FR-005"
+      ],
+      "reads": [
+        "artifacts_index",
+        "api_contract"
+      ],
+      "writes": [
+        "test_suite_index"
+      ],
+      "risk": "low",
+      "rationale": "Tests are written against the contract, not against the implementation",
+      "status": "succeeded",
+      "attempts": 1,
+      "max_attempts": 2,
+      "origin": "plan",
+      "error": null,
+      "duration_ms": 8,
+      "artifact_ids": [
+        "tests/conftest.py",
+        "tests/test_shortcode.py",
+        "tests/test_api.py",
+        "tests/test_analytics.py"
+      ]
+    },
+    "T-030": {
+      "id": "T-030",
+      "title": "Write the architecture decision record and update the README",
+      "agent": "documentation",
+      "depends_on": [
+        "T-010"
+      ],
+      "covers": [
+        "FR-007"
+      ],
+      "reads": [
+        "architecture",
+        "api_contract"
+      ],
+      "writes": [
+        "documentation_index"
+      ],
+      "risk": "low",
+      "rationale": "Independent of the test suite, so it runs alongside it",
+      "status": "succeeded",
+      "attempts": 1,
+      "max_attempts": 2,
+      "origin": "plan",
+      "error": null,
+      "duration_ms": 4,
+      "artifact_ids": [
+        "docs/adr/001-analytics-off-the-redirect-path.md",
+        "README.md"
+      ]
+    },
+    "T-040": {
+      "id": "T-040",
+      "title": "Validate the workspace against the contract and run the suite",
+      "agent": "validation",
+      "depends_on": [
+        "T-020",
+        "T-030"
+      ],
+      "covers": [],
+      "reads": [
+        "artifacts_index"
+      ],
+      "writes": [
+        "validation_report"
+      ],
+      "risk": "low",
+      "rationale": "Independent verification; findings become new graph nodes",
+      "status": "succeeded",
+      "attempts": 1,
+      "max_attempts": 2,
+      "origin": "plan",
+      "error": null,
+      "duration_ms": 4147,
+      "artifact_ids": [
+        "validation-round-1.md",
+        "validation-approach.md"
+      ]
+    },
+    "T-050": {
+      "id": "T-050",
+      "title": "Summarize the run for a human reviewer",
+      "agent": "summary",
+      "depends_on": [
+        "T-040",
+        "T-901-R1"
+      ],
+      "covers": [],
+      "reads": [
+        "requirement"
+      ],
+      "writes": [
+        "run_summary"
+      ],
+      "risk": "low",
+      "rationale": "Reports what was decided, what was verified and what is still open",
+      "status": "succeeded",
+      "attempts": 1,
+      "max_attempts": 2,
+      "origin": "plan",
+      "error": null,
+      "duration_ms": 5,
+      "artifact_ids": [
+        "summary.md"
+      ]
+    },
+    "T-900-R1": {
+      "id": "T-900-R1",
+      "title": "Repair 1 validation finding(s)",
+      "agent": "repair",
+      "depends_on": [],
+      "covers": [],
+      "reads": [
+        "artifacts_index",
+        "api_contract"
+      ],
+      "writes": [
+        "repair_summary"
+      ],
+      "risk": "medium",
+      "rationale": "scheduled by the engine from structured validation findings",
+      "status": "succeeded",
+      "attempts": 1,
+      "max_attempts": 2,
+      "origin": "repair",
+      "error": null,
+      "duration_ms": 8,
+      "artifact_ids": [
+        "app/api/routes.py"
+      ]
+    },
+    "T-901-R1": {
+      "id": "T-901-R1",
+      "title": "Re-validate after repair round 1",
+      "agent": "validation",
+      "depends_on": [
+        "T-900-R1"
+      ],
+      "covers": [],
+      "reads": [
+        "artifacts_index"
+      ],
+      "writes": [
+        "validation_report"
+      ],
+      "risk": "low",
+      "rationale": "closes the loop; a repair is not trusted until re-checked",
+      "status": "succeeded",
+      "attempts": 1,
+      "max_attempts": 2,
+      "origin": "repair",
+      "error": null,
+      "duration_ms": 3809,
+      "artifact_ids": [
+        "validation-round-2.md"
+      ]
+    }
+  },
+  "artifacts": {
+    "docs/requirements.md": {
+      "id": "docs/requirements.md",
+      "kind": "doc",
+      "path": "docs/requirements.md",
+      "content": "# Requirements\n\n## Requested\n\n> Build a scalable URL shortener service with APIs, persistence, and analytics.\n\n## Interpreted intent\n\nA link shortening service: create short codes for long URLs, resolve them quickly, and report how often each one is used.\n\nKind: greenfield\n\n## Functional\n\n| ID | Priority | Requirement |\n| --- | --- | --- |\n| FR-001 | must | Create a short code for a submitted long URL |\n| FR-002 | should | Accept an optional caller-supplied custom alias |\n| FR-003 | must | Resolve a short code to its target with an HTTP redirect |\n| FR-004 | should | Support an optional expiry after which a link stops resolving |\n| FR-005 | must | Report per-link click totals, recent activity and top referrers |\n| FR-006 | must | Deactivate a link so it no longer resolves |\n| FR-007 | should | Expose liveness and readiness endpoints for operation |\n\n## Non-functional\n\n| ID | Category | Requirement | Target |\n| --- | --- | --- | --- |\n| NFR-001 | performance | Redirect latency must stay within a fixed budget at the tail | p99 < 50ms server-side, excluding network |\n| NFR-002 | scalability | Sustain the target redirect rate on commodity hardware | 10k redirects/sec across horizontally scaled instances |\n| NFR-003 | availability | Analytics recording must never block or fail a redirect; losing a click is preferable to delaying a user | \u2014 |\n| NFR-004 | security | Reject non-http(s) targets and reserved aliases so short links cannot be used as redirect gadgets | \u2014 |\n| NFR-005 | observability | Expose health and readiness suitable for a load balancer | \u2014 |\n\n## Ambiguities\n\nWhat the request did not say, and what was done about it.\n\n### AMB-001 \u2014 What read and write volume must this sustain, and over what link corpus?\n\nBlocking: yes. Matters because It decides the storage engine and whether the cache is in-process or shared. Getting it wrong is a rewrite, not a tuning exercise.\n\nResolved by default: 10k redirects/sec and 1M links, read-dominant by roughly 100:1\n\n### AMB-002 \u2014 Are link creation and deletion authenticated, and by whom?\n\nBlocking: no. Matters because An unauthenticated create endpoint is an open redirect factory and a spam vector.\n\nResolved by default: No authentication in this stage; an owner field is recorded so authorization can be added without a migration\n\n### AMB-003 \u2014 How long must click events be retained, and at what granularity?\n\nBlocking: no. Matters because It sets the storage growth rate and the aggregation strategy.\n\nResolved by default: Raw events retained indefinitely at this scale; daily rollups served from a 30-day window\n\n## Out of scope\n\n- A web UI; the deliverable is an HTTP API\n- Custom domains per tenant\n- Malware and phishing classification of submitted targets\n- Billing, quotas and rate limiting\n",
+      "produced_by": "T-001",
+      "covers": [
+        "FR-001",
+        "FR-002",
+        "FR-003",
+        "FR-004",
+        "FR-005",
+        "FR-006",
+        "FR-007",
+        "NFR-001",
+        "NFR-002",
+        "NFR-003",
+        "NFR-004",
+        "NFR-005"
+      ],
+      "language": "markdown",
+      "supersedes": null
+    },
+    "docs/architecture.md": {
+      "id": "docs/architecture.md",
+      "kind": "doc",
+      "path": "docs/architecture.md",
+      "content": "# Architecture\n\n**Style.** Modular monolith with cache-aside reads and an asynchronous analytics writer\n\nOne deployable with hard internal seams. The redirect path is the only latency-critical path, so it is the one that gets a cache in front of it and nothing synchronous behind it. Everything the redirect does not need \u2014 recording the click, aggregating it, serving reports \u2014 happens off that path. Storage and cache are reached through narrow interfaces so the sqlite and in-process implementations can be replaced by Postgres and Redis without touching the handlers.\n\n## Shape\n\n```mermaid\ngraph LR\n    Client -->|POST /api/v1/urls| API[HTTP API]\n    Client -->|GET /{code}| API\n    API --> Cache[LRU + TTL cache]\n    Cache -.miss.-> Urls[URL repository]\n    Urls --> DB[(sqlite WAL)]\n    API -.enqueue, non-blocking.-> Recorder[Analytics recorder]\n    Recorder -.batched flush.-> Clicks[Click repository]\n    Clicks --> DB\n```\n\n## Components\n\n| Component | Responsibility | Technology | Scaling |\n| --- | --- | --- | --- |\n| HTTP API | Validate input, map domain errors to status codes, serve redirects | FastAPI | stateless |\n| Shortcode generator | Produce and validate base62 codes; reject reserved paths | Python stdlib secrets | stateless |\n| Read cache | Serve code to target lookups without touching storage | In-process LRU with TTL | stateful |\n| URL repository | Persist links, handle alias collisions, enforce expiry | sqlite3 behind a repository interface | stateless |\n| Analytics recorder | Buffer click events on a bounded queue and flush them in batches from a background thread | Python threading and queue | stateful |\n| Click repository | Persist click events and answer aggregate queries | sqlite3 | stateless |\n| Database | Durable storage for links and clicks | sqlite3 in WAL mode | managed |\n\n## Data flows\n\n- Client \u2192 HTTP API (synchronous): POST a long URL, receive a short code\n- HTTP API \u2192 Read cache (synchronous): Resolve a code, falling through to storage on a miss\n- HTTP API \u2192 Analytics recorder (asynchronous): Enqueue a click event and return immediately\n- Analytics recorder \u2192 Click repository (asynchronous): Flush buffered events in batches on an interval\n\n## Decisions\n\n### How short codes are generated\n\n**Chosen.** Random base62 with a bounded collision retry\n\n**Rejected.** Monotonic counter encoded to base62, Hash of the target URL truncated to n characters\n\n**Why.** A counter makes every link enumerable, which exposes every customer's links to anyone who can count. A hash makes identical targets collide into one code, so one deletion breaks unrelated links.\n\n**Accepted cost.** Collisions must be detected and retried, and code length has to grow with the corpus to keep the collision rate negligible.\n\n### Where click recording happens\n\n**Chosen.** Off the redirect path, on a bounded queue with a background flusher\n\n**Rejected.** Write the click inline before redirecting, Publish to an external durable queue\n\n**Why.** An inline write makes redirect latency a function of database load, which violates the one budget users actually feel. A durable broker is the right end state but adds an operational dependency this stage does not justify.\n\n**Accepted cost.** Clicks buffered in memory are lost on an unclean shutdown, and under sustained overload events are dropped rather than queued without bound.\n\n### Storage engine\n\n**Chosen.** sqlite3 behind a repository interface\n\n**Rejected.** PostgreSQL from the start, A managed key-value store\n\n**Why.** The interface, not the engine, is the durable decision. sqlite keeps the system runnable with no infrastructure while the seam that allows Postgres to replace it is exercised from day one.\n\n**Accepted cost.** Single-writer contention means sqlite will not reach the stated throughput target; it is a development and evaluation engine, and the migration is required before production.\n\n### Redirect status code\n\n**Chosen.** 302 Found\n\n**Rejected.** 301 Moved Permanently\n\n**Why.** A 301 is cached by the browser, so subsequent clicks never reach the service and are never counted. That silently destroys the analytics product the requirement asks for.\n\n**Accepted cost.** Every click costs a round trip; the service cannot shed that load to browser caches.\n\n## Risks\n\n| ID | Risk | Likelihood | Impact | Severity | Mitigation |\n| --- | --- | --- | --- | --- | --- |\n| RISK-001 | Buffered click events are lost if the process dies | medium | medium | medium | Flush on shutdown, keep the interval short, and expose the dropped counter; move to a durable queue before analytics become billable |\n| RISK-002 | sqlite write contention will not sustain the target redirect rate | high | high | high | Repository interface is the seam; migrate to Postgres with a shared Redis cache before any load beyond evaluation |\n| RISK-003 | The service can be used to launder links to malicious targets | medium | high | high | Scheme validation rejects non-http(s) targets today; reputation checking and authenticated creation are required before public use |\n| RISK-004 | A deleted link keeps resolving from a stale cache entry | low | medium | low | Deletion invalidates the cache entry in the same request |\n",
+      "produced_by": "T-002",
+      "covers": [],
+      "language": "markdown",
+      "supersedes": null
+    },
+    "openapi.yaml": {
+      "id": "openapi.yaml",
+      "kind": "api_spec",
+      "path": "openapi.yaml",
+      "content": "openapi: \"3.0.3\"\ninfo:\n  title: \"URL Shortener\"\n  version: \"1.0.0\"\npaths:\n  /api/v1/urls:\n    post:\n      summary: \"Create a short link\"\n      responses:\n        201:\n          description: \"response\"\n        409:\n          description: \"response\"\n        422:\n          description: \"response\"\n  /api/v1/urls/{code}:\n    get:\n      summary: \"Read link metadata without resolving it\"\n      responses:\n        200:\n          description: \"response\"\n        404:\n          description: \"response\"\n    delete:\n      summary: \"Deactivate a link\"\n      responses:\n        204:\n          description: \"response\"\n        404:\n          description: \"response\"\n  /api/v1/analytics/{code}:\n    get:\n      summary: \"Click analytics for a short link\"\n      responses:\n        200:\n          description: \"response\"\n        404:\n          description: \"response\"\n  /healthz:\n    get:\n      summary: \"Liveness\"\n      responses:\n        200:\n          description: \"response\"\n  /readyz:\n    get:\n      summary: \"Readiness, including database reachability\"\n      responses:\n        200:\n          description: \"response\"\n        503:\n          description: \"response\"\n  /{code}:\n    get:\n      summary: \"Resolve a short code and redirect\"\n      responses:\n        302:\n          description: \"response\"\n        404:\n          description: \"response\"",
+      "produced_by": "T-003",
+      "covers": [
+        "FR-001",
+        "FR-002",
+        "FR-003",
+        "FR-004",
+        "FR-005",
+        "FR-006",
+        "FR-007"
+      ],
+      "language": "yaml",
+      "supersedes": null
+    },
+    "docs/plan.md": {
+      "id": "docs/plan.md",
+      "kind": "doc",
+      "path": "docs/plan.md",
+      "content": "# Execution plan\n\n## Strategy\n\nBuild, test and document from the approved contract. Implementation is one task rather than several because the modules share a composition root and splitting them would create tasks that cannot be validated independently. Tests and documentation do not depend on each other, so they are scheduled as siblings and run concurrently. Validation is a separate node, not a step inside implementation, because an agent must not be the judge of its own output.\n\n## Concurrency\n\nT-020 and T-030 are independent; the critical path is implementation -> tests -> validation.\n\n## Tasks\n\n| ID | Task | Agent | Depends on | Reads | Writes | Risk |\n| --- | --- | --- | --- | --- | --- | --- |\n| T-010 | Implement the service from the architecture and contract | `implementation` | T-004 | `api_contract`, `architecture` | `artifacts_index`, `implementation_summary` | medium |\n| T-020 | Generate an executable test suite from the contract | `test` | T-010 | `artifacts_index`, `api_contract` | `test_suite_index` | low |\n| T-030 | Write the architecture decision record and update the README | `documentation` | T-010 | `architecture`, `api_contract` | `documentation_index` | low |\n| T-040 | Validate the workspace against the contract and run the suite | `validation` | T-020, T-030 | `artifacts_index` | `validation_report` | low |\n| T-050 | Summarize the run for a human reviewer | `summary` | T-040 | `requirement` | `run_summary` | low |\n\n## Graph\n\n```mermaid\ngraph TD\n    T-010[\"T-010<br/>implementation\"]\n    T-020[\"T-020<br/>test\"]\n    T-030[\"T-030<br/>documentation\"]\n    T-040[\"T-040<br/>validation\"]\n    T-050[\"T-050<br/>summary\"]\n    T-004 --> T-010\n    T-010 --> T-020\n    T-010 --> T-030\n    T-020 --> T-040\n    T-030 --> T-040\n    T-040 --> T-050\n```\n",
+      "produced_by": "T-004",
+      "covers": [],
+      "language": "markdown",
+      "supersedes": null
+    },
+    "app/__init__.py": {
+      "id": "app/__init__.py",
+      "kind": "code",
+      "path": "app/__init__.py",
+      "content": "\"\"\"URL shortener service.\"\"\"\n",
+      "produced_by": "T-010",
+      "covers": [],
+      "language": "python",
+      "supersedes": null
+    },
+    "app/config.py": {
+      "id": "app/config.py",
+      "kind": "code",
+      "path": "app/config.py",
+      "content": "from __future__ import annotations\n\nimport os\nfrom dataclasses import dataclass\n\n\n@dataclass(frozen=True)\nclass Settings:\n    \"\"\"Runtime configuration. Every value is overridable by environment.\"\"\"\n\n    db_path: str = os.getenv(\"URLS_DB_PATH\", \"urls.db\")\n    base_url: str = os.getenv(\"URLS_BASE_URL\", \"http://localhost:8000\")\n    code_length: int = int(os.getenv(\"URLS_CODE_LENGTH\", \"7\"))\n    cache_capacity: int = int(os.getenv(\"URLS_CACHE_CAPACITY\", \"10000\"))\n    cache_ttl_s: float = float(os.getenv(\"URLS_CACHE_TTL_S\", \"300\"))\n    analytics_batch: int = int(os.getenv(\"URLS_ANALYTICS_BATCH\", \"50\"))\n    analytics_interval_s: float = float(os.getenv(\"URLS_ANALYTICS_INTERVAL_S\", \"1.0\"))\n    analytics_queue_size: int = int(os.getenv(\"URLS_ANALYTICS_QUEUE\", \"10000\"))\n    max_collision_retries: int = 5\n",
+      "produced_by": "T-010",
+      "covers": [],
+      "language": "python",
+      "supersedes": null
+    },
+    "app/models.py": {
+      "id": "app/models.py",
+      "kind": "code",
+      "path": "app/models.py",
+      "content": "from __future__ import annotations\n\nimport time\nfrom dataclasses import dataclass\n\n\n@dataclass(frozen=True)\nclass ShortUrl:\n    \"\"\"Domain entity. Deliberately separate from the transport schemas so the\n    wire format can change without touching persistence.\"\"\"\n\n    code: str\n    long_url: str\n    created_at: float\n    expires_at: float | None = None\n    owner: str | None = None\n    active: bool = True\n\n    @property\n    def expired(self) -> bool:\n        return self.expires_at is not None and self.expires_at <= time.time()\n\n    @property\n    def resolvable(self) -> bool:\n        return self.active and not self.expired\n\n\n@dataclass(frozen=True)\nclass ClickEvent:\n    code: str\n    occurred_at: float\n    referrer: str | None = None\n    user_agent: str | None = None\n",
+      "produced_by": "T-010",
+      "covers": [],
+      "language": "python",
+      "supersedes": null
+    },
+    "app/db.py": {
+      "id": "app/db.py",
+      "kind": "code",
+      "path": "app/db.py",
+      "content": "from __future__ import annotations\n\nimport sqlite3\nimport threading\nfrom contextlib import contextmanager\nfrom typing import Iterator\n\nSCHEMA = \"\"\"\nCREATE TABLE IF NOT EXISTS short_urls (\n    code       TEXT PRIMARY KEY,\n    long_url   TEXT NOT NULL,\n    created_at REAL NOT NULL,\n    expires_at REAL,\n    owner      TEXT,\n    active     INTEGER NOT NULL DEFAULT 1\n);\nCREATE INDEX IF NOT EXISTS idx_short_urls_long_url ON short_urls(long_url);\nCREATE INDEX IF NOT EXISTS idx_short_urls_expires  ON short_urls(expires_at);\n\nCREATE TABLE IF NOT EXISTS click_events (\n    id          INTEGER PRIMARY KEY AUTOINCREMENT,\n    code        TEXT NOT NULL,\n    occurred_at REAL NOT NULL,\n    referrer    TEXT,\n    user_agent  TEXT\n);\nCREATE INDEX IF NOT EXISTS idx_click_events_code_time\n    ON click_events(code, occurred_at);\n\"\"\"\n\n\nclass Database:\n    \"\"\"Thin sqlite3 wrapper with per-thread connections.\n\n    sqlite3 connections are not safe to share across threads, and the analytics\n    worker writes from its own thread, so each thread gets its own handle and WAL\n    keeps the redirect reads from blocking behind those writes.\n    \"\"\"\n\n    def __init__(self, path: str):\n        self.path = path\n        self._local = threading.local()\n        self._all: list[sqlite3.Connection] = []\n        self._lock = threading.Lock()\n\n    def connect(self) -> sqlite3.Connection:\n        conn = getattr(self._local, \"conn\", None)\n        if conn is None:\n            conn = sqlite3.connect(self.path, timeout=5.0, check_same_thread=False)\n            conn.row_factory = sqlite3.Row\n            conn.execute(\"PRAGMA journal_mode=WAL\")\n            conn.execute(\"PRAGMA synchronous=NORMAL\")\n            self._local.conn = conn\n            with self._lock:\n                self._all.append(conn)\n        return conn\n\n    def init_schema(self) -> None:\n        conn = self.connect()\n        conn.executescript(SCHEMA)\n        conn.commit()\n\n    @contextmanager\n    def tx(self) -> Iterator[sqlite3.Connection]:\n        conn = self.connect()\n        try:\n            yield conn\n            conn.commit()\n        except Exception:\n            conn.rollback()\n            raise\n\n    def close(self) -> None:\n        with self._lock:\n            for conn in self._all:\n                try:\n                    conn.close()\n                except sqlite3.Error:\n                    pass\n            self._all.clear()\n",
+      "produced_by": "T-010",
+      "covers": [],
+      "language": "python",
+      "supersedes": null
+    },
+    "app/shortcode.py": {
+      "id": "app/shortcode.py",
+      "kind": "code",
+      "path": "app/shortcode.py",
+      "content": "from __future__ import annotations\n\nimport re\nimport secrets\n\nALPHABET = \"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz\"\nBASE = len(ALPHABET)\n_VALID = re.compile(r\"^[0-9A-Za-z]{4,16}$\")\n\n# Paths the service owns. A user-supplied alias may never shadow one of them.\nRESERVED = frozenset(\n    {\"api\", \"health\", \"healthz\", \"readyz\", \"docs\", \"redoc\", \"openapi\", \"metrics\", \"static\"}\n)\n\n\ndef generate(length: int = 7) -> str:\n    \"\"\"Random code from a CSPRNG.\n\n    Random rather than a counter: sequential ids let anyone enumerate every link\n    in the system. The cost is collisions, which the repository retries against\n    the primary-key constraint. At 62^7 the birthday bound is far beyond the\n    volume this service is sized for.\n    \"\"\"\n    return \"\".join(secrets.choice(ALPHABET) for _ in range(length))\n\n\ndef encode(number: int) -> str:\n    if number < 0:\n        raise ValueError(\"number must be non-negative\")\n    if number == 0:\n        return ALPHABET[0]\n    out: list[str] = []\n    while number:\n        number, rem = divmod(number, BASE)\n        out.append(ALPHABET[rem])\n    return \"\".join(reversed(out))\n\n\ndef decode(code: str) -> int:\n    total = 0\n    for char in code:\n        total = total * BASE + ALPHABET.index(char)\n    return total\n\n\ndef is_valid(code: str) -> bool:\n    return bool(_VALID.match(code)) and code.lower() not in RESERVED\n",
+      "produced_by": "T-010",
+      "covers": [
+        "FR-001",
+        "FR-002"
+      ],
+      "language": "python",
+      "supersedes": null
+    },
+    "app/cache.py": {
+      "id": "app/cache.py",
+      "kind": "code",
+      "path": "app/cache.py",
+      "content": "from __future__ import annotations\n\nimport threading\nimport time\nfrom collections import OrderedDict\nfrom typing import Any, Protocol\n\n\nclass Cache(Protocol):\n    def get(self, key: str) -> Any | None: ...\n    def set(self, key: str, value: Any) -> None: ...\n    def invalidate(self, key: str) -> None: ...\n\n\nclass LruTtlCache:\n    \"\"\"In-process cache-aside store for the redirect hot path.\n\n    The interface is the seam: swapping this for Redis in production is a\n    constructor change in `main.create_app`, because nothing else imports it.\n    \"\"\"\n\n    def __init__(self, capacity: int = 10_000, ttl_s: float = 300.0):\n        self._capacity = capacity\n        self._ttl = ttl_s\n        self._data: OrderedDict[str, tuple[float, Any]] = OrderedDict()\n        self._lock = threading.Lock()\n        self.hits = 0\n        self.misses = 0\n\n    def get(self, key: str) -> Any | None:\n        with self._lock:\n            entry = self._data.get(key)\n            if entry is None:\n                self.misses += 1\n                return None\n            expires_at, value = entry\n            if expires_at <= time.time():\n                del self._data[key]\n                self.misses += 1\n                return None\n            self._data.move_to_end(key)\n            self.hits += 1\n            return value\n\n    def set(self, key: str, value: Any) -> None:\n        with self._lock:\n            self._data[key] = (time.time() + self._ttl, value)\n            self._data.move_to_end(key)\n            while len(self._data) > self._capacity:\n                self._data.popitem(last=False)\n\n    def invalidate(self, key: str) -> None:\n        with self._lock:\n            self._data.pop(key, None)\n\n    def stats(self) -> dict[str, int | float]:\n        total = self.hits + self.misses\n        return {\n            \"hits\": self.hits,\n            \"misses\": self.misses,\n            \"size\": len(self._data),\n            \"hit_ratio\": round(self.hits / total, 4) if total else 0.0,\n        }\n",
+      "produced_by": "T-010",
+      "covers": [
+        "NFR-001"
+      ],
+      "language": "python",
+      "supersedes": null
+    },
+    "app/repository.py": {
+      "id": "app/repository.py",
+      "kind": "code",
+      "path": "app/repository.py",
+      "content": "from __future__ import annotations\n\nimport sqlite3\nimport time\nfrom collections import Counter\n\nfrom .db import Database\nfrom .models import ClickEvent, ShortUrl\nfrom .shortcode import generate\n\n\nclass CodeUnavailable(Exception):\n    \"\"\"The requested alias is already taken.\"\"\"\n\n\nclass UrlRepository:\n    def __init__(self, db: Database, code_length: int = 7, max_retries: int = 5):\n        self._db = db\n        self._code_length = code_length\n        self._max_retries = max_retries\n\n    @staticmethod\n    def _row_to_url(row: sqlite3.Row) -> ShortUrl:\n        return ShortUrl(\n            code=row[\"code\"],\n            long_url=row[\"long_url\"],\n            created_at=row[\"created_at\"],\n            expires_at=row[\"expires_at\"],\n            owner=row[\"owner\"],\n            active=bool(row[\"active\"]),\n        )\n\n    def create(\n        self,\n        long_url: str,\n        code: str | None = None,\n        expires_at: float | None = None,\n        owner: str | None = None,\n    ) -> ShortUrl:\n        \"\"\"Insert a mapping, retrying generated-code collisions.\n\n        The uniqueness decision belongs to the database, not to a read-then-write\n        check in the application: two concurrent writers would both pass a check\n        and one would still lose. The PRIMARY KEY is the arbiter.\n        \"\"\"\n        attempts = 1 if code else self._max_retries\n        for attempt in range(attempts):\n            candidate = code or generate(self._code_length)\n            try:\n                with self._db.tx() as conn:\n                    conn.execute(\n                        \"INSERT INTO short_urls (code, long_url, created_at, expires_at,\"\n                        \" owner, active) VALUES (?, ?, ?, ?, ?, 1)\",\n                        (candidate, long_url, time.time(), expires_at, owner),\n                    )\n                return self.get(candidate)  # type: ignore[return-value]\n            except sqlite3.IntegrityError:\n                if code is not None:\n                    raise CodeUnavailable(candidate) from None\n                if attempt == attempts - 1:\n                    raise\n        raise CodeUnavailable(\"exhausted code generation retries\")\n\n    def get(self, code: str) -> ShortUrl | None:\n        row = (\n            self._db.connect()\n            .execute(\"SELECT * FROM short_urls WHERE code = ?\", (code,))\n            .fetchone()\n        )\n        return self._row_to_url(row) if row else None\n\n    def deactivate(self, code: str) -> bool:\n        with self._db.tx() as conn:\n            cur = conn.execute(\n                \"UPDATE short_urls SET active = 0 WHERE code = ? AND active = 1\", (code,)\n            )\n        return cur.rowcount > 0\n\n    def purge_expired(self, now: float | None = None) -> int:\n        now = now if now is not None else time.time()\n        with self._db.tx() as conn:\n            cur = conn.execute(\n                \"UPDATE short_urls SET active = 0\"\n                \" WHERE active = 1 AND expires_at IS NOT NULL AND expires_at <= ?\",\n                (now,),\n            )\n        return cur.rowcount\n\n\nclass ClickRepository:\n    def __init__(self, db: Database):\n        self._db = db\n\n    def record_many(self, events: list[ClickEvent]) -> int:\n        if not events:\n            return 0\n        with self._db.tx() as conn:\n            conn.executemany(\n                \"INSERT INTO click_events (code, occurred_at, referrer, user_agent)\"\n                \" VALUES (?, ?, ?, ?)\",\n                [(e.code, e.occurred_at, e.referrer, e.user_agent) for e in events],\n            )\n        return len(events)\n\n    def summary(self, code: str) -> dict:\n        conn = self._db.connect()\n        totals = conn.execute(\n            \"SELECT COUNT(*) AS total, MAX(occurred_at) AS last_click\"\n            \" FROM click_events WHERE code = ?\",\n            (code,),\n        ).fetchone()\n        by_day = conn.execute(\n            \"SELECT date(occurred_at, 'unixepoch') AS day, COUNT(*) AS clicks\"\n            \" FROM click_events WHERE code = ? GROUP BY day ORDER BY day DESC LIMIT 30\",\n            (code,),\n        ).fetchall()\n        referrers = conn.execute(\n            \"SELECT referrer FROM click_events WHERE code = ? AND referrer IS NOT NULL\",\n            (code,),\n        ).fetchall()\n        top = Counter(r[\"referrer\"] for r in referrers).most_common(5)\n        return {\n            \"total_clicks\": totals[\"total\"] or 0,\n            \"last_click_at\": totals[\"last_click\"],\n            \"clicks_by_day\": {r[\"day\"]: r[\"clicks\"] for r in by_day},\n            \"top_referrers\": [{\"referrer\": k, \"clicks\": v} for k, v in top],\n        }\n",
+      "produced_by": "T-010",
+      "covers": [
+        "FR-001",
+        "FR-004",
+        "FR-006"
+      ],
+      "language": "python",
+      "supersedes": null
+    },
+    "app/analytics.py": {
+      "id": "app/analytics.py",
+      "kind": "code",
+      "path": "app/analytics.py",
+      "content": "from __future__ import annotations\n\nimport queue\nimport threading\nimport time\n\nfrom .models import ClickEvent\nfrom .repository import ClickRepository\n\n\nclass AnalyticsRecorder:\n    \"\"\"Buffers click events off the redirect path and writes them in batches.\n\n    Recording is explicitly lossy under overload: if the queue is full the event\n    is dropped and counted rather than blocking a redirect. Analytics are a\n    reporting concern, and a 300ms redirect to protect a click count is a worse\n    outcome than an approximate click count. `dropped` is exported so the loss is\n    visible instead of silent.\n    \"\"\"\n\n    def __init__(\n        self,\n        repository: ClickRepository,\n        batch_size: int = 50,\n        interval_s: float = 1.0,\n        queue_size: int = 10_000,\n    ):\n        self._repo = repository\n        self._batch = batch_size\n        self._interval = interval_s\n        self._queue: queue.Queue[ClickEvent] = queue.Queue(maxsize=queue_size)\n        self._stop = threading.Event()\n        self._worker: threading.Thread | None = None\n        self.dropped = 0\n        self.written = 0\n\n    def start(self) -> None:\n        if self._worker is not None:\n            return\n        self._stop.clear()\n        self._worker = threading.Thread(\n            target=self._loop, name=\"analytics-writer\", daemon=True\n        )\n        self._worker.start()\n\n    def stop(self) -> None:\n        self._stop.set()\n        if self._worker is not None:\n            self._worker.join(timeout=5.0)\n            self._worker = None\n        self.flush()\n\n    def record(self, event: ClickEvent) -> bool:\n        try:\n            self._queue.put_nowait(event)\n            return True\n        except queue.Full:\n            self.dropped += 1\n            return False\n\n    def _write(self, events: list[ClickEvent]) -> int:\n        if not events:\n            return 0\n        written = self._repo.record_many(events)\n        self.written += written\n        for _ in events:\n            self._queue.task_done()\n        return written\n\n    def flush(self) -> int:\n        \"\"\"Drain and persist everything currently accepted.\n\n        Draining the queue is not sufficient on its own: the worker may already\n        hold an event it has not written yet, which is invisible to a caller\n        polling the queue. `task_done`/`join` is the handoff that closes that\n        window, so flush is a real barrier rather than a best effort.\n        \"\"\"\n        drained: list[ClickEvent] = []\n        while True:\n            try:\n                drained.append(self._queue.get_nowait())\n            except queue.Empty:\n                break\n        written = self._write(drained)\n        self._queue.join()\n        return written\n\n    def _loop(self) -> None:\n        pending: list[ClickEvent] = []\n        last_write = time.monotonic()\n        while not self._stop.is_set():\n            try:\n                pending.append(self._queue.get(timeout=self._interval))\n            except queue.Empty:\n                pass\n            due = time.monotonic() - last_write >= self._interval\n            if pending and (len(pending) >= self._batch or due):\n                self._write(pending)\n                pending = []\n                last_write = time.monotonic()\n        self._write(pending)\n\n    def stats(self) -> dict[str, int]:\n        return {\"written\": self.written, \"dropped\": self.dropped, \"queued\": self._queue.qsize()}\n",
+      "produced_by": "T-010",
+      "covers": [
+        "FR-005"
+      ],
+      "language": "python",
+      "supersedes": null
+    },
+    "app/schemas.py": {
+      "id": "app/schemas.py",
+      "kind": "code",
+      "path": "app/schemas.py",
+      "content": "from __future__ import annotations\n\nfrom pydantic import AnyHttpUrl, BaseModel, Field\n\n\nclass CreateUrlRequest(BaseModel):\n    \"\"\"AnyHttpUrl is the security control: it rejects javascript:, data: and\n    file: targets, which would otherwise turn every short link into a redirect\n    gadget.\"\"\"\n\n    long_url: AnyHttpUrl\n    custom_code: str | None = Field(default=None, min_length=4, max_length=16)\n    ttl_seconds: int | None = Field(default=None, ge=60, le=60 * 60 * 24 * 365)\n    owner: str | None = None\n\n\nclass ShortUrlResponse(BaseModel):\n    code: str\n    short_url: str\n    long_url: str\n    created_at: float\n    expires_at: float | None = None\n    active: bool = True\n\n\nclass ReferrerCount(BaseModel):\n    referrer: str\n    clicks: int\n\n\nclass AnalyticsResponse(BaseModel):\n    code: str\n    total_clicks: int\n    last_click_at: float | None = None\n    clicks_by_day: dict[str, int] = {}\n    top_referrers: list[ReferrerCount] = []\n\n\nclass HealthResponse(BaseModel):\n    status: str\n    checks: dict[str, str] = {}\n",
+      "produced_by": "T-010",
+      "covers": [
+        "NFR-004"
+      ],
+      "language": "python",
+      "supersedes": null
+    },
+    "app/api/__init__.py": {
+      "id": "app/api/__init__.py",
+      "kind": "code",
+      "path": "app/api/__init__.py",
+      "content": "from .routes import router\n\n__all__ = [\"router\"]\n",
+      "produced_by": "T-010",
+      "covers": [],
+      "language": "python",
+      "supersedes": null
+    },
+    "app/api/routes.py": {
+      "id": "app/api/routes.py",
+      "kind": "code",
+      "path": "app/api/routes.py",
+      "content": "from __future__ import annotations\n\nimport time\n\nfrom fastapi import APIRouter, HTTPException, Request, Response\nfrom fastapi.responses import RedirectResponse\n\nfrom ..models import ClickEvent\nfrom ..repository import CodeUnavailable\nfrom ..schemas import AnalyticsResponse, CreateUrlRequest, HealthResponse, ShortUrlResponse\nfrom ..shortcode import is_valid\n\nrouter = APIRouter()\n\n\ndef _to_response(request: Request, url) -> ShortUrlResponse:\n    base = request.app.state.settings.base_url.rstrip(\"/\")\n    return ShortUrlResponse(\n        code=url.code,\n        short_url=base + \"/\" + url.code,\n        long_url=url.long_url,\n        created_at=url.created_at,\n        expires_at=url.expires_at,\n        active=url.active,\n    )\n\n\n@router.post(\"/api/v1/urls\", response_model=ShortUrlResponse, status_code=201)\ndef create_url(payload: CreateUrlRequest, request: Request) -> ShortUrlResponse:\n    repo = request.app.state.urls\n    if payload.custom_code is not None and not is_valid(payload.custom_code):\n        raise HTTPException(status_code=422, detail=\"custom_code is reserved or malformed\")\n    expires_at = time.time() + payload.ttl_seconds if payload.ttl_seconds else None\n    try:\n        url = repo.create(\n            long_url=str(payload.long_url),\n            code=payload.custom_code,\n            expires_at=expires_at,\n            owner=payload.owner,\n        )\n    except CodeUnavailable:\n        raise HTTPException(status_code=409, detail=\"custom_code already in use\") from None\n    return _to_response(request, url)\n\n\n@router.get(\"/api/v1/urls/{code}\", response_model=ShortUrlResponse)\ndef get_url(code: str, request: Request) -> ShortUrlResponse:\n    url = request.app.state.urls.get(code)\n    if url is None:\n        raise HTTPException(status_code=404, detail=\"unknown code\")\n    return _to_response(request, url)\n\n\n@router.delete(\"/api/v1/urls/{code}\", status_code=204)\ndef delete_url(code: str, request: Request) -> Response:\n    if not request.app.state.urls.deactivate(code):\n        raise HTTPException(status_code=404, detail=\"unknown code\")\n    request.app.state.cache.invalidate(code)\n    return Response(status_code=204)\n\n\n@router.get(\"/healthz\", response_model=HealthResponse)\ndef healthz() -> HealthResponse:\n    return HealthResponse(status=\"ok\")\n\n\n@router.get(\"/readyz\", response_model=HealthResponse)\ndef readyz(request: Request) -> HealthResponse:\n    try:\n        request.app.state.db.connect().execute(\"SELECT 1\").fetchone()\n    except Exception as exc:  # noqa: BLE001 - readiness must report, not raise\n        raise HTTPException(status_code=503, detail=f\"database unavailable: {exc}\") from exc\n    return HealthResponse(status=\"ready\", checks={\"database\": \"ok\"})\n\n\n# Registered last on purpose: FastAPI resolves routes in declaration order, so a\n# single-segment catch-all must not be able to shadow /healthz or /api/*.\n@router.get(\"/{code}\")\ndef redirect(code: str, request: Request) -> RedirectResponse:\n    cache = request.app.state.cache\n    target = cache.get(code)\n\n    if target is None:\n        url = request.app.state.urls.get(code)\n        if url is None or not url.resolvable:\n            raise HTTPException(status_code=404, detail=\"unknown or expired code\")\n        target = url.long_url\n        cache.set(code, target)\n\n    request.app.state.analytics.record(\n        ClickEvent(\n            code=code,\n            occurred_at=time.time(),\n            referrer=request.headers.get(\"referer\"),\n            user_agent=request.headers.get(\"user-agent\"),\n        )\n    )\n    # 302, not 301: a permanent redirect is cached by the browser and the click\n    # is never reported again, which silently destroys the analytics product.\n    return RedirectResponse(url=target, status_code=302)\n@router.get(\"/api/v1/analytics/{code}\", response_model=AnalyticsResponse)\ndef get_analytics(code: str, request: Request) -> AnalyticsResponse:\n    if request.app.state.urls.get(code) is None:\n        raise HTTPException(status_code=404, detail=\"unknown code\")\n    summary = request.app.state.clicks.summary(code)\n    return AnalyticsResponse(code=code, **summary)\n",
+      "produced_by": "T-900-R1",
+      "covers": [
+        "FR-001",
+        "FR-002",
+        "FR-003",
+        "FR-006",
+        "FR-007"
+      ],
+      "language": "python",
+      "supersedes": null
+    },
+    "app/main.py": {
+      "id": "app/main.py",
+      "kind": "code",
+      "path": "app/main.py",
+      "content": "from __future__ import annotations\n\nfrom contextlib import asynccontextmanager\n\nfrom fastapi import FastAPI\n\nfrom .analytics import AnalyticsRecorder\nfrom .api.routes import router\nfrom .cache import LruTtlCache\nfrom .config import Settings\nfrom .db import Database\nfrom .repository import ClickRepository, UrlRepository\n\n\ndef create_app(settings: Settings | None = None) -> FastAPI:\n    \"\"\"Composition root. Every dependency is constructed here and reached through\n    `app.state`, which is what lets the tests swap in a temporary database\n    without patching module globals.\"\"\"\n\n    settings = settings or Settings()\n    database = Database(settings.db_path)\n    database.init_schema()\n\n    urls = UrlRepository(database, settings.code_length, settings.max_collision_retries)\n    clicks = ClickRepository(database)\n    recorder = AnalyticsRecorder(\n        clicks,\n        batch_size=settings.analytics_batch,\n        interval_s=settings.analytics_interval_s,\n        queue_size=settings.analytics_queue_size,\n    )\n\n    @asynccontextmanager\n    async def lifespan(app: FastAPI):\n        recorder.start()\n        try:\n            yield\n        finally:\n            recorder.stop()\n            database.close()\n\n    app = FastAPI(title=\"URL Shortener\", version=\"1.0.0\", lifespan=lifespan)\n    app.state.settings = settings\n    app.state.db = database\n    app.state.urls = urls\n    app.state.clicks = clicks\n    app.state.cache = LruTtlCache(settings.cache_capacity, settings.cache_ttl_s)\n    app.state.analytics = recorder\n    app.include_router(router)\n    return app\n\n\napp = create_app()\n",
+      "produced_by": "T-010",
+      "covers": [
+        "FR-007"
+      ],
+      "language": "python",
+      "supersedes": null
+    },
+    "migrations/001_init.sql": {
+      "id": "migrations/001_init.sql",
+      "kind": "migration",
+      "path": "migrations/001_init.sql",
+      "content": "-- 001_init.sql\n-- Forward migration for the URL shortener.\n-- Both statements are idempotent so a partially applied migration can be re-run.\n\nCREATE TABLE IF NOT EXISTS short_urls (\n    code       TEXT PRIMARY KEY,\n    long_url   TEXT NOT NULL,\n    created_at REAL NOT NULL,\n    expires_at REAL,\n    owner      TEXT,\n    active     INTEGER NOT NULL DEFAULT 1\n);\n\nCREATE INDEX IF NOT EXISTS idx_short_urls_long_url ON short_urls(long_url);\nCREATE INDEX IF NOT EXISTS idx_short_urls_expires  ON short_urls(expires_at);\n\nCREATE TABLE IF NOT EXISTS click_events (\n    id          INTEGER PRIMARY KEY AUTOINCREMENT,\n    code        TEXT NOT NULL,\n    occurred_at REAL NOT NULL,\n    referrer    TEXT,\n    user_agent  TEXT\n);\n\nCREATE INDEX IF NOT EXISTS idx_click_events_code_time\n    ON click_events(code, occurred_at);\n\n-- Rollback, described rather than executable on purpose: the platform's policy\n-- layer forbids generated artifacts from containing destructive DDL, so undoing\n-- this migration is a deliberate human step, not a statement an agent can run.\n-- Reverse order: index idx_click_events_code_time, then table click_events,\n-- then indexes idx_short_urls_expires and idx_short_urls_long_url, then table\n-- short_urls.\n",
+      "produced_by": "T-010",
+      "covers": [],
+      "language": "sql",
+      "supersedes": null
+    },
+    "requirements.txt": {
+      "id": "requirements.txt",
+      "kind": "doc",
+      "path": "requirements.txt",
+      "content": "fastapi>=0.110\nuvicorn[standard]>=0.29\npydantic>=2.6\nhttpx>=0.27\npytest>=7.4\n",
+      "produced_by": "T-010",
+      "covers": [],
+      "language": "python",
+      "supersedes": null
+    },
+    "tests/conftest.py": {
+      "id": "tests/conftest.py",
+      "kind": "test",
+      "path": "tests/conftest.py",
+      "content": "from __future__ import annotations\n\nimport sys\nfrom pathlib import Path\n\nimport pytest\nfrom fastapi.testclient import TestClient\n\nsys.path.insert(0, str(Path(__file__).resolve().parents[1]))\n\nfrom app.config import Settings  # noqa: E402\nfrom app.main import create_app  # noqa: E402\n\n\n@pytest.fixture\ndef settings(tmp_path) -> Settings:\n    return Settings(\n        db_path=str(tmp_path / \"test.db\"),\n        base_url=\"http://testserver\",\n        analytics_interval_s=0.05,\n        analytics_batch=1,\n    )\n\n\n@pytest.fixture\ndef client(settings) -> TestClient:\n    with TestClient(create_app(settings)) as test_client:\n        yield test_client\n",
+      "produced_by": "T-020",
+      "covers": [],
+      "language": "python",
+      "supersedes": null
+    },
+    "tests/test_shortcode.py": {
+      "id": "tests/test_shortcode.py",
+      "kind": "test",
+      "path": "tests/test_shortcode.py",
+      "content": "from __future__ import annotations\n\nimport pytest\n\nfrom app.shortcode import RESERVED, decode, encode, generate, is_valid\n\n\ndef test_generate_respects_length():\n    assert len(generate(7)) == 7\n    assert len(generate(12)) == 12\n\n\ndef test_generated_codes_are_valid_and_unique_enough():\n    codes = {generate(7) for _ in range(2000)}\n    assert len(codes) == 2000\n    assert all(is_valid(code) for code in codes)\n\n\n@pytest.mark.parametrize(\"number\", [0, 1, 61, 62, 3843, 987654321])\ndef test_base62_roundtrip(number):\n    assert decode(encode(number)) == number\n\n\ndef test_encode_rejects_negative():\n    with pytest.raises(ValueError):\n        encode(-1)\n\n\n@pytest.mark.parametrize(\"code\", sorted(RESERVED))\ndef test_reserved_paths_are_not_valid_codes(code):\n    assert is_valid(code) is False\n\n\n@pytest.mark.parametrize(\"code\", [\"abc\", \"a\" * 17, \"has space\", \"sym!bol\"])\ndef test_malformed_codes_rejected(code):\n    assert is_valid(code) is False\n",
+      "produced_by": "T-020",
+      "covers": [],
+      "language": "python",
+      "supersedes": null
+    },
+    "tests/test_api.py": {
+      "id": "tests/test_api.py",
+      "kind": "test",
+      "path": "tests/test_api.py",
+      "content": "from __future__ import annotations\n\nTARGET = \"https://example.com/some/deep/path?q=1\"\n\n\ndef test_create_returns_201_with_short_url(client):\n    response = client.post(\"/api/v1/urls\", json={\"long_url\": TARGET})\n    assert response.status_code == 201\n    body = response.json()\n    assert body[\"long_url\"] == TARGET\n    assert body[\"short_url\"].endswith(body[\"code\"])\n    assert body[\"active\"] is True\n\n\ndef test_redirect_is_302_to_target(client):\n    code = client.post(\"/api/v1/urls\", json={\"long_url\": TARGET}).json()[\"code\"]\n    response = client.get(\"/\" + code, follow_redirects=False)\n    assert response.status_code == 302\n    assert response.headers[\"location\"] == TARGET\n\n\ndef test_unknown_code_is_404(client):\n    assert client.get(\"/nosuchcode\", follow_redirects=False).status_code == 404\n\n\ndef test_non_http_scheme_is_rejected(client):\n    response = client.post(\"/api/v1/urls\", json={\"long_url\": \"javascript:alert(1)\"})\n    assert response.status_code == 422\n\n\ndef test_custom_alias_is_honoured_then_conflicts(client):\n    first = client.post(\n        \"/api/v1/urls\", json={\"long_url\": TARGET, \"custom_code\": \"schwab1\"}\n    )\n    assert first.status_code == 201\n    assert first.json()[\"code\"] == \"schwab1\"\n\n    second = client.post(\n        \"/api/v1/urls\", json={\"long_url\": TARGET, \"custom_code\": \"schwab1\"}\n    )\n    assert second.status_code == 409\n\n\ndef test_reserved_alias_is_rejected(client):\n    response = client.post(\n        \"/api/v1/urls\", json={\"long_url\": TARGET, \"custom_code\": \"healthz\"}\n    )\n    assert response.status_code == 422\n\n\ndef test_expired_link_stops_resolving(client):\n    code = client.post(\n        \"/api/v1/urls\", json={\"long_url\": TARGET, \"ttl_seconds\": 60}\n    ).json()[\"code\"]\n    client.app.state.urls.purge_expired(now=9_999_999_999)\n    client.app.state.cache.invalidate(code)\n    assert client.get(\"/\" + code, follow_redirects=False).status_code == 404\n\n\ndef test_delete_removes_link_from_cache_and_resolution(client):\n    code = client.post(\"/api/v1/urls\", json={\"long_url\": TARGET}).json()[\"code\"]\n    assert client.get(\"/\" + code, follow_redirects=False).status_code == 302\n    assert client.delete(\"/api/v1/urls/\" + code).status_code == 204\n    assert client.get(\"/\" + code, follow_redirects=False).status_code == 404\n\n\ndef test_metadata_endpoint(client):\n    code = client.post(\"/api/v1/urls\", json={\"long_url\": TARGET}).json()[\"code\"]\n    body = client.get(\"/api/v1/urls/\" + code).json()\n    assert body[\"code\"] == code\n    assert client.get(\"/api/v1/urls/missing\").status_code == 404\n\n\ndef test_health_endpoints_are_not_shadowed_by_the_catch_all(client):\n    assert client.get(\"/healthz\").json()[\"status\"] == \"ok\"\n    assert client.get(\"/readyz\").json()[\"status\"] == \"ready\"\n",
+      "produced_by": "T-020",
+      "covers": [],
+      "language": "python",
+      "supersedes": null
+    },
+    "tests/test_analytics.py": {
+      "id": "tests/test_analytics.py",
+      "kind": "test",
+      "path": "tests/test_analytics.py",
+      "content": "from __future__ import annotations\n\nimport time\n\nfrom app.analytics import AnalyticsRecorder\nfrom app.db import Database\nfrom app.models import ClickEvent\nfrom app.repository import ClickRepository\n\nTARGET = \"https://example.com/analytics-target\"\n\n\ndef _create(client) -> str:\n    return client.post(\"/api/v1/urls\", json={\"long_url\": TARGET}).json()[\"code\"]\n\n\ndef test_clicks_are_counted(client):\n    code = _create(client)\n    for _ in range(3):\n        client.get(\"/\" + code, follow_redirects=False)\n    client.app.state.analytics.flush()\n\n    body = client.get(\"/api/v1/analytics/\" + code).json()\n    assert body[\"code\"] == code\n    assert body[\"total_clicks\"] == 3\n    assert body[\"last_click_at\"] is not None\n\n\ndef test_referrers_are_attributed(client):\n    code = _create(client)\n    client.get(\"/\" + code, headers={\"referer\": \"https://news.example\"}, follow_redirects=False)\n    client.get(\"/\" + code, headers={\"referer\": \"https://news.example\"}, follow_redirects=False)\n    client.get(\"/\" + code, headers={\"referer\": \"https://blog.example\"}, follow_redirects=False)\n    client.app.state.analytics.flush()\n\n    top = client.get(\"/api/v1/analytics/\" + code).json()[\"top_referrers\"]\n    assert top[0] == {\"referrer\": \"https://news.example\", \"clicks\": 2}\n\n\ndef test_analytics_for_unknown_code_is_404(client):\n    assert client.get(\"/api/v1/analytics/nosuchcode\").status_code == 404\n\n\ndef test_recorder_drops_instead_of_blocking(settings):\n    \"\"\"Overload must shed load, not slow the redirect path down.\"\"\"\n    db = Database(settings.db_path)\n    db.init_schema()\n    recorder = AnalyticsRecorder(ClickRepository(db), queue_size=2)\n    try:\n        accepted = [\n            recorder.record(ClickEvent(code=\"abcd\", occurred_at=time.time()))\n            for _ in range(5)\n        ]\n        assert accepted.count(True) == 2\n        assert recorder.dropped == 3\n        assert recorder.flush() == 2\n    finally:\n        db.close()\n",
+      "produced_by": "T-020",
+      "covers": [
+        "FR-005"
+      ],
+      "language": "python",
+      "supersedes": null
+    },
+    "docs/adr/001-analytics-off-the-redirect-path.md": {
+      "id": "docs/adr/001-analytics-off-the-redirect-path.md",
+      "kind": "doc",
+      "path": "docs/adr/001-analytics-off-the-redirect-path.md",
+      "content": "# ADR-001: Analytics is written off the redirect path\n\n## Status\n\nAccepted.\n\n## Context\n\nThe redirect is the only endpoint with a latency budget that users feel, and it\nis the one endpoint every click passes through. Recording a click is a write.\nPutting a write in front of the redirect means the slowest component in the\nsystem \u2014 the database under load \u2014 decides how fast links resolve.\n\n## Decision\n\nThe redirect handler enqueues a click event onto a bounded in-process queue and\nreturns. A background worker drains the queue in batches and writes them.\n\nWhen the queue is full, events are dropped and counted rather than blocking the\nproducer. The counter is exposed so the loss is visible instead of silent.\n\n## Consequences\n\nRedirect latency no longer depends on write throughput, and an analytics outage\ndegrades reporting instead of taking down redirects.\n\nThe cost is real and accepted: events buffered in memory are lost if the process\ndies, and analytics are eventually consistent, so a click may not appear in a\nreport for up to one flush interval. Under sustained overload the system reports\nfewer clicks than occurred \u2014 deliberately, because the alternative is reporting\nall of them slowly and failing the latency budget for every user.\n\nMoving the queue onto a durable broker removes the loss window and is the\nexpected next step; it was not done here because it adds an operational\ndependency this stage does not yet justify.\n",
+      "produced_by": "T-030",
+      "covers": [],
+      "language": "markdown",
+      "supersedes": null
+    },
+    "README.md": {
+      "id": "README.md",
+      "kind": "doc",
+      "path": "README.md",
+      "content": "# URL Shortener\n\nGenerated by the Agentic Software Engineering Platform from the requirement:\n\n> Build a scalable URL shortener service with APIs, persistence, and analytics.\n\n## Run\n\n```bash\npip install -r requirements.txt\nuvicorn app.main:app --reload\n```\n\n```bash\ncurl -X POST localhost:8000/api/v1/urls \\\n  -H 'content-type: application/json' \\\n  -d '{\"long_url\": \"https://example.com/a/very/long/path\"}'\n\ncurl -i localhost:8000/<code>\ncurl localhost:8000/api/v1/analytics/<code>\n```\n\n## Test\n\n```bash\npytest -q\n```\n\n## Design\n\n| Concern | Decision | Why |\n| --- | --- | --- |\n| Code generation | 7-char CSPRNG base62 | sequential ids let anyone enumerate every link |\n| Collisions | database PRIMARY KEY + retry | a read-then-write check loses under concurrency |\n| Read path | cache-aside, LRU + TTL | redirects are the hot path and are read-dominated |\n| Redirect status | 302, not 301 | 301 is cached by browsers and analytics stop arriving |\n| Analytics write | queued, batched, lossy under overload | a redirect must not wait on a reporting write |\n| Persistence | sqlite3 behind a repository | the port is the seam; Postgres is an adapter swap |\n\n## Production gaps\n\nThis is a prototype. Before production it needs: Postgres and Redis adapters in\nplace of the sqlite3 and in-process implementations, rate limiting on link\ncreation, a malware/phishing check on submitted targets, authentication on\ncreate and delete, and the analytics worker moved out of process onto a durable\nqueue so events survive a restart.\n",
+      "produced_by": "T-030",
+      "covers": [
+        "FR-007"
+      ],
+      "language": "markdown",
+      "supersedes": null
+    },
+    "validation-round-1.md": {
+      "id": "validation-round-1.md",
+      "kind": "report",
+      "path": "validation-round-1.md",
+      "content": "# Validation round 1\n\n**Result: FAIL** \u2014 3 error(s), 0 warning(s), 1 machine-repairable.\n\n| Check | Status | Detail | Time |\n| --- | --- | --- | --- |\n| structure | pass | 3/3 required paths present | 0ms |\n| syntax | pass | parsed 16 python file(s) | 23ms |\n| guardrails | pass | no forbidden operations found | 61ms |\n| api_contract | fail | 6/7 declared endpoints implemented | 24ms |\n| traceability | pass | 4/4 must-have requirements covered | 0ms |\n| tests | fail | 34 passed, 2 failed, 0 skipped in 3973ms | 3975ms |\n\n## Errors\n\n- **api_contract** \u2014 contract declares GET /api/v1/analytics/{code} (Click analytics for a short link) but no route implements it\n  - file: `app/api/routes.py`\n  - repair: add a route handler for GET /api/v1/analytics/{code} to app/api/routes.py returning AnalyticsResponse, and import that model\n- **tests** \u2014 failing test: tests/test_analytics.py::test_clicks_are_counted\n  - file: `tests/test_analytics.py`\n  - repair: no machine-actionable hint; needs a human\n- **tests** \u2014 failing test: tests/test_analytics.py::test_referrers_are_attributed\n  - file: `tests/test_analytics.py`\n  - repair: no machine-actionable hint; needs a human\n",
+      "produced_by": "T-040",
+      "covers": [],
+      "language": "markdown",
+      "supersedes": null
+    },
+    "validation-approach.md": {
+      "id": "validation-approach.md",
+      "kind": "report",
+      "path": "validation-approach.md",
+      "content": "# Validation approach\n\nWhat this run checks, how, and what it cannot tell you. Derived from the workspace and the configured checks rather than declared in advance, so it describes the suite that exists rather than the one that was intended.\n\n## Test strategy\n\n20 test case(s) across 3 file(s): 1 unit file(s) and 2 integration file(s).\n\n**Unit tests** import their subject directly and assert its behaviour in isolation \u2014 the cheap, fast layer that pins down edge cases which are awkward to provoke through the front door.\n\n**Integration tests** drive the assembled application through HTTP. They are what catches wiring mistakes: a component can be individually correct and never connected.\n\n| File | Kind | Cases | Exercises |\n| --- | --- | --- | --- |\n| `tests/test_analytics.py` | integration | 4 | `app.analytics`, `app.db`, `app.models`, `app.repository` |\n| `tests/test_api.py` | integration | 10 | the assembled application over HTTP |\n| `tests/test_shortcode.py` | unit | 6 | `app.shortcode` |\n\n## Verification steps\n\nEach check runs against the files on disk. None of them asks an agent whether its own work was correct.\n\n| # | Check | What a pass establishes | What it cannot catch |\n| --- | --- | --- | --- |\n| 1 | `structure` | The deliverable is a runnable project, not a pile of snippets | Says nothing about whether the code in those files is correct |\n| 2 | `syntax` | Every generated module parses | A module can parse perfectly and still be wrong in every other way |\n| 3 | `guardrails` | No file on disk contains a forbidden destructive operation | Pattern matching over text; it does not understand intent, and novel phrasings of a dangerous action are not in the list |\n| 4 | `api_contract` | Every endpoint the approved contract declares exists in the code | Checks that a route exists, not that it behaves as the contract describes |\n| 5 | `traceability` | Every must-have requirement is claimed by some artifact | An artifact claiming to cover a requirement is not evidence that it does |\n| 6 | `tests` | The generated suite executed and passed in a subprocess | Only covers what the suite asserts; a passing suite bounds risk, it does not eliminate it |\n\n## Failure handling\n\nA failing check produces structured findings. A finding specific enough to describe its own fix is repaired and then **re-validated** \u2014 a repair is never trusted on the strength of having been applied. A finding that cannot describe a fix is escalated to a human rather than retried, and the repair budget is finite so a loop that is not converging stops instead of running forever.\n\n## What is not verified\n\n- Performance. No load test runs, so the latency and throughput targets in the requirements are unmeasured \u2014 they are design intent, not results.\n- Security. There is no dependency audit, no static security analysis and no penetration testing. The guardrail check refuses a list of known destructive operations; that is not a security review.\n- Concurrency under real load. Thread-safety is argued for in the design and exercised only incidentally by the suite.\n- Operational behaviour. Nothing is deployed, so migrations, startup, shutdown and failure modes are untested outside the test harness.\n- Out of scope by decision: A web UI; the deliverable is an HTTP API\n- Out of scope by decision: Custom domains per tenant\n- Out of scope by decision: Malware and phishing classification of submitted targets\n- Out of scope by decision: Billing, quotas and rate limiting\n- Contract conformance is structural: the checks confirm each declared endpoint exists, and the tests assert the behaviour they happen to cover. Request and response bodies are not schema-validated against the published spec.\n",
+      "produced_by": "T-040",
+      "covers": [],
+      "language": "markdown",
+      "supersedes": null
+    },
+    "validation-round-2.md": {
+      "id": "validation-round-2.md",
+      "kind": "report",
+      "path": "validation-round-2.md",
+      "content": "# Validation round 2\n\n**Result: PASS** \u2014 0 error(s), 0 warning(s), 0 machine-repairable.\n\n| Check | Status | Detail | Time |\n| --- | --- | --- | --- |\n| structure | pass | 3/3 required paths present | 2ms |\n| syntax | pass | parsed 16 python file(s) | 25ms |\n| guardrails | pass | no forbidden operations found | 39ms |\n| api_contract | pass | 7/7 declared endpoints implemented | 32ms |\n| traceability | pass | 4/4 must-have requirements covered | 0ms |\n| tests | pass | 36 passed, 0 failed, 0 skipped in 3705ms | 3706ms |\n",
+      "produced_by": "T-901-R1",
+      "covers": [],
+      "language": "markdown",
+      "supersedes": null
+    },
+    "summary.md": {
+      "id": "summary.md",
+      "kind": "report",
+      "path": "summary.md",
+      "content": "# Run summary\n\n**Run `48f8a9ca` \u2014 succeeded** in 8021ms\n\n> Build a scalable URL shortener service with APIs, persistence, and analytics.\n\nA link shortening service: create short codes for long URLs, resolve them quickly, and report how often each one is used. \u2014 28 artifact(s) from 11 completed task(s)\n\n## Implementation plan and rationale\n\nBuild, test and document from the approved contract. Implementation is one task rather than several because the modules share a composition root and splitting them would create tasks that cannot be validated independently. Tests and documentation do not depend on each other, so they are scheduled as siblings and run concurrently. Validation is a separate node, not a step inside implementation, because an agent must not be the judge of its own output.\n\n**Sequencing.** T-020 and T-030 are independent; the critical path is implementation -> tests -> validation.\n\nEach task below states why it exists. Tasks marked `repair` were not planned \u2014 the engine added them to the running graph after validation found a defect.\n\n| Task | Why it is in the plan |\n| --- | --- |\n| T-001 | Everything downstream traces to the ids this task assigns |\n| T-002 | Independent of the API contract, so the two are designed concurrently |\n| T-003 | Derived from the requirements, not from the architecture; validation later holds the implementation to it |\n| T-004 | Needs both the design and the contract before it can decompose work |\n| T-010 | Writes source into the workspace, so it is gated for human approval |\n| T-020 | Tests are written against the contract, not against the implementation |\n| T-030 | Independent of the test suite, so it runs alongside it |\n| T-040 | Independent verification; findings become new graph nodes |\n| T-050 | Reports what was decided, what was verified and what is still open |\n| T-900-R1 | scheduled by the engine from structured validation findings |\n| T-901-R1 | closes the loop; a repair is not trusted until re-checked |\n\n## Execution\n\n| Status | Tasks |\n| --- | --- |\n| succeeded | 11 |\n\n| Task | Agent | Status | Origin | Attempts | Time |\n| --- | --- | --- | --- | --- | --- |\n| T-001 | `requirement` | succeeded | plan | 1 | 1ms |\n| T-002 | `architecture` | succeeded | plan | 1 | 2ms |\n| T-003 | `api_design` | succeeded | plan | 1 | 2ms |\n| T-004 | `planner` | succeeded | plan | 1 | 1ms |\n| T-010 | `implementation` | succeeded | plan | 1 | 13ms |\n| T-020 | `test` | succeeded | plan | 1 | 8ms |\n| T-030 | `documentation` | succeeded | plan | 1 | 4ms |\n| T-040 | `validation` | succeeded | plan | 1 | 4147ms |\n| T-050 | `summary` | succeeded | plan | 1 | 5ms |\n| T-900-R1 | `repair` | succeeded | repair | 1 | 8ms |\n| T-901-R1 | `validation` | succeeded | repair | 1 | 3809ms |\n\n## Approvals\n\n| Task | Decision | Approver | Reason |\n| --- | --- | --- | --- |\n| T-010 | approved | auto-approve | --yes supplied; gate recorded but not blocking |\n| T-900-R1 | approved | auto-approve | --yes supplied; gate recorded but not blocking |\n\n## What was built\n\n- 16 source and test file(s), 891 lines\n- 7 endpoint(s) under contract v1.0.0\n- architecture: Modular monolith with cache-aside reads and an asynchronous analytics writer\n\n### Generated artifacts\n\nEvery file this run produced, with the task that produced it and the requirements it claims to cover. A claim of coverage is traceability, not proof.\n\n| Artifact | Kind | Lines | Produced by | Covers |\n| --- | --- | --- | --- | --- |\n| `openapi.yaml` | api_spec | 60 | T-003 | FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007 |\n| `app/__init__.py` | code | 2 | T-010 | \u2014 |\n| `app/analytics.py` | code | 105 | T-010 | FR-005 |\n| `app/api/__init__.py` | code | 4 | T-010 | \u2014 |\n| `app/api/routes.py` | code | 107 | T-900-R1 | FR-001, FR-002, FR-003, FR-006, FR-007 |\n| `app/cache.py` | code | 64 | T-010 | NFR-001 |\n| `app/config.py` | code | 20 | T-010 | \u2014 |\n| `app/db.py` | code | 81 | T-010 | \u2014 |\n| `app/main.py` | code | 54 | T-010 | FR-007 |\n| `app/models.py` | code | 34 | T-010 | \u2014 |\n| `app/repository.py` | code | 128 | T-010 | FR-001, FR-004, FR-006 |\n| `app/schemas.py` | code | 42 | T-010 | NFR-004 |\n| `app/shortcode.py` | code | 48 | T-010 | FR-001, FR-002 |\n| `README.md` | doc | 47 | T-030 | FR-007 |\n| `docs/adr/001-analytics-off-the-redirect-path.md` | doc | 36 | T-030 | \u2014 |\n| `docs/architecture.md` | doc | 90 | T-002 | \u2014 |\n| `docs/plan.md` | doc | 37 | T-004 | \u2014 |\n| `docs/requirements.md` | doc | 63 | T-001 | FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, NFR-001, NFR-002, NFR-003, NFR-004, NFR-005 |\n| `requirements.txt` | doc | 6 | T-010 | \u2014 |\n| `migrations/001_init.sql` | migration | 34 | T-010 | \u2014 |\n| `summary.md` | report | 159 | T-050 | \u2014 |\n| `validation-approach.md` | report | 47 | T-040 | \u2014 |\n| `validation-round-1.md` | report | 25 | T-040 | \u2014 |\n| `validation-round-2.md` | report | 13 | T-901-R1 | \u2014 |\n| `tests/conftest.py` | test | 29 | T-020 | \u2014 |\n| `tests/test_analytics.py` | test | 59 | T-020 | FR-005 |\n| `tests/test_api.py` | test | 77 | T-020 | \u2014 |\n| `tests/test_shortcode.py` | test | 37 | T-020 | \u2014 |\n\n## Decisions and what they cost\n\n- How short codes are generated: chose Random base62 with a bounded collision retry \u2014 Collisions must be detected and retried, and code length has to grow with the corpus to keep the collision rate negligible.\n- Where click recording happens: chose Off the redirect path, on a bounded queue with a background flusher \u2014 Clicks buffered in memory are lost on an unclean shutdown, and under sustained overload events are dropped rather than queued without bound.\n- Storage engine: chose sqlite3 behind a repository interface \u2014 Single-writer contention means sqlite will not reach the stated throughput target; it is a development and evaluation engine, and the migration is required before production.\n- Redirect status code: chose 302 Found \u2014 Every click costs a round trip; the service cannot shed that load to browser caches.\n\n## Repairs\n\nAdded the analytics route the contract declares, and imported the response model it returns.\n\n- `app/api/routes.py` (replace) \u2014 contract declares GET /api/v1/analytics/{code} (Click analytics for a short link) but no route implements it\n- `app/api/routes.py` (append) \u2014 contract declares GET /api/v1/analytics/{code} (Click analytics for a short link) but no route implements it\n\n## Verification\n\nValidation pass after 2 round(s). These checks parsed the files on disk and executed the generated suite; none of them asked an agent whether its own work was correct.\n\n| Check | Status | Detail |\n| --- | --- | --- |\n| structure | pass | 3/3 required paths present |\n| syntax | pass | parsed 16 python file(s) |\n| guardrails | pass | no forbidden operations found |\n| api_contract | pass | 7/7 declared endpoints implemented |\n| traceability | pass | 4/4 must-have requirements covered |\n| tests | pass | 36 passed, 0 failed, 0 skipped in 3705ms |\n\n## Open risks\n\n- RISK-001 (medium): Buffered click events are lost if the process dies \u2014 Flush on shutdown, keep the interval short, and expose the dropped counter; move to a durable queue before analytics become billable\n- RISK-002 (high): sqlite write contention will not sustain the target redirect rate \u2014 Repository interface is the seam; migrate to Postgres with a shared Redis cache before any load beyond evaluation\n- RISK-003 (high): The service can be used to launder links to malicious targets \u2014 Scheme validation rejects non-http(s) targets today; reputation checking and authenticated creation are required before public use\n\n## Assumptions this run made\n\n- **default** (AMB-001): 10k redirects/sec and 1M links, read-dominant by roughly 100:1\n- **default** (AMB-002): No authentication in this stage; an owner field is recorded so authorization can be added without a migration\n- **default** (AMB-003): Raw events retained indefinitely at this scale; daily rollups served from a 30-day window\n\n## Limitations\n\nWhat this run does not establish. Stated because a report that only lists what passed invites the reader to assume the rest was covered.\n\n- Correctness is established only as far as the suite asserts it (36 passed, 0 failed, 0 skipped in 3705ms). A passing suite bounds risk; it does not eliminate it.\n- No performance, load or security testing was run, so any latency, throughput or security target in the requirements is design intent rather than a measured result.\n- Contract conformance is structural: every declared endpoint exists, but request and response bodies are not schema-validated against the published spec.\n- 3 requirement(s) were resolved by an assumed default rather than by a human answer; if any of those assumptions is wrong, the design built on it is wrong.\n- Deliberately out of scope: A web UI; the deliverable is an HTTP API; Custom domains per tenant; Malware and phishing classification of submitted targets; Billing, quotas and rate limiting.\n- The deliverable is a prototype. It has not been deployed, so migrations, startup and shutdown are untested outside the test harness.\n\nThe full validation approach \u2014 the test strategy, what each check proves, and what none of them can see \u2014 is in `validation-approach.md` beside this file.\n\n## Next steps\n\n- Confirm the assumption behind AMB-001: 10k redirects/sec and 1M links, read-dominant by roughly 100:1\n- Confirm the assumption behind AMB-002: No authentication in this stage; an owner field is recorded so authorization can be added without a migration\n- Confirm the assumption behind AMB-003: Raw events retained indefinitely at this scale; daily rollups served from a 30-day window\n- Out of scope, still unbuilt: A web UI; the deliverable is an HTTP API\n- Out of scope, still unbuilt: Custom domains per tenant\n- Out of scope, still unbuilt: Malware and phishing classification of submitted targets\n",
+      "produced_by": "T-050",
+      "covers": [],
+      "language": "markdown",
+      "supersedes": null
+    }
+  },
+  "events": [
+    {
+      "seq": 1,
+      "ts": 1790137302.5687842,
+      "type": "run_started",
+      "task_id": null,
+      "agent": null,
+      "message": "run 48f8a9ca (mock mode, 4 tasks)",
+      "data": {
+        "tasks": 4,
+        "levels": 3,
+        "critical_path": [
+          "T-001",
+          "T-002",
+          "T-004"
+        ]
+      }
+    },
+    {
+      "seq": 2,
+      "ts": 1790137302.5687842,
+      "type": "task_started",
+      "task_id": "T-001",
+      "agent": "requirement",
+      "message": "T-001 Normalize the requirement and surface what it does not say",
+      "data": {
+        "attempt": 1,
+        "parallel_with": []
+      }
+    },
+    {
+      "seq": 3,
+      "ts": 1790137302.5707958,
+      "type": "task_succeeded",
+      "task_id": "T-001",
+      "agent": "requirement",
+      "message": "T-001 normalized into 7 functional and 5 non-functional requirements; 3 ambiguity(ies), 3 resolved",
+      "data": {
+        "artifacts": [
+          "docs/requirements.md"
+        ],
+        "wrote": [
+          "requirement"
+        ],
+        "duration_ms": 1
+      }
+    },
+    {
+      "seq": 4,
+      "ts": 1790137302.5719373,
+      "type": "task_started",
+      "task_id": "T-002",
+      "agent": "architecture",
+      "message": "T-002 Design the system and record what each decision costs",
+      "data": {
+        "attempt": 1,
+        "parallel_with": [
+          "T-003"
+        ]
+      }
+    },
+    {
+      "seq": 5,
+      "ts": 1790137302.5719373,
+      "type": "task_started",
+      "task_id": "T-003",
+      "agent": "api_design",
+      "message": "T-003 Define the HTTP contract",
+      "data": {
+        "attempt": 1,
+        "parallel_with": [
+          "T-002"
+        ]
+      }
+    },
+    {
+      "seq": 6,
+      "ts": 1790137302.5719373,
+      "type": "task_succeeded",
+      "task_id": "T-002",
+      "agent": "architecture",
+      "message": "T-002 Modular monolith with cache-aside reads and an asynchronous analytics writer: 7 component(s), 4 trade-off(s), 4 risk(s), high severity: RISK-002, RISK-003",
+      "data": {
+        "artifacts": [
+          "docs/architecture.md"
+        ],
+        "wrote": [
+          "architecture"
+        ],
+        "duration_ms": 2
+      }
+    },
+    {
+      "seq": 7,
+      "ts": 1790137302.5719373,
+      "type": "task_succeeded",
+      "task_id": "T-003",
+      "agent": "api_design",
+      "message": "T-003 7 endpoint(s) v1.0.0: POST /api/v1/urls, GET /api/v1/urls/{code}, DELETE /api/v1/urls/{code}, GET /api/v1/analytics/{code}, GET /healthz, GET /readyz, GET /{code}",
+      "data": {
+        "artifacts": [
+          "openapi.yaml"
+        ],
+        "wrote": [
+          "api_contract"
+        ],
+        "duration_ms": 2
+      }
+    },
+    {
+      "seq": 8,
+      "ts": 1790137302.5719373,
+      "type": "task_started",
+      "task_id": "T-004",
+      "agent": "planner",
+      "message": "T-004 Plan the build and inject it into the running graph",
+      "data": {
+        "attempt": 1,
+        "parallel_with": []
+      }
+    },
+    {
+      "seq": 9,
+      "ts": 1790137302.5719373,
+      "type": "task_succeeded",
+      "task_id": "T-004",
+      "agent": "planner",
+      "message": "T-004 planned 5 task(s) for injection; T-020 + T-030 can run concurrently",
+      "data": {
+        "artifacts": [
+          "docs/plan.md"
+        ],
+        "wrote": [
+          "work_plan"
+        ],
+        "duration_ms": 1
+      }
+    },
+    {
+      "seq": 10,
+      "ts": 1790137302.5719373,
+      "type": "graph_mutated",
+      "task_id": "T-010",
+      "agent": "implementation",
+      "message": "+T-010 (implementation) \u2014 requested by T-004",
+      "data": {
+        "depends_on": [
+          "T-004"
+        ]
+      }
+    },
+    {
+      "seq": 11,
+      "ts": 1790137302.5719373,
+      "type": "graph_mutated",
+      "task_id": "T-020",
+      "agent": "test",
+      "message": "+T-020 (test) \u2014 requested by T-004",
+      "data": {
+        "depends_on": [
+          "T-010"
+        ]
+      }
+    },
+    {
+      "seq": 12,
+      "ts": 1790137302.5719373,
+      "type": "graph_mutated",
+      "task_id": "T-030",
+      "agent": "documentation",
+      "message": "+T-030 (documentation) \u2014 requested by T-004",
+      "data": {
+        "depends_on": [
+          "T-010"
+        ]
+      }
+    },
+    {
+      "seq": 13,
+      "ts": 1790137302.5719373,
+      "type": "graph_mutated",
+      "task_id": "T-040",
+      "agent": "validation",
+      "message": "+T-040 (validation) \u2014 requested by T-004",
+      "data": {
+        "depends_on": [
+          "T-020",
+          "T-030"
+        ]
+      }
+    },
+    {
+      "seq": 14,
+      "ts": 1790137302.5719373,
+      "type": "graph_mutated",
+      "task_id": "T-050",
+      "agent": "summary",
+      "message": "+T-050 (summary) \u2014 requested by T-004",
+      "data": {
+        "depends_on": [
+          "T-040",
+          "T-901-R1"
+        ]
+      }
+    },
+    {
+      "seq": 15,
+      "ts": 1790137302.5719373,
+      "type": "approval_requested",
+      "task_id": "T-010",
+      "agent": "implementation",
+      "message": "T-010 needs approval (risk=medium)",
+      "data": {}
+    },
+    {
+      "seq": 16,
+      "ts": 1790137302.5719373,
+      "type": "approval_granted",
+      "task_id": "T-010",
+      "agent": null,
+      "message": "T-010 approved by auto-approve",
+      "data": {}
+    },
+    {
+      "seq": 17,
+      "ts": 1790137302.5719373,
+      "type": "task_started",
+      "task_id": "T-010",
+      "agent": "implementation",
+      "message": "T-010 Implement the service from the architecture and contract",
+      "data": {
+        "attempt": 1,
+        "parallel_with": []
+      }
+    },
+    {
+      "seq": 18,
+      "ts": 1790137302.589829,
+      "type": "task_succeeded",
+      "task_id": "T-010",
+      "agent": "implementation",
+      "message": "T-010 wrote 14 file(s), 723 lines \u2014 Implemented the service as a FastAPI application over sqlite3: base62 code generation with collision retry, a cache-aside read path, expiry and deactivation, and a background analytics writer fed by a bounded queue.",
+      "data": {
+        "artifacts": [
+          "app/__init__.py",
+          "app/config.py",
+          "app/models.py",
+          "app/db.py",
+          "app/shortcode.py",
+          "app/cache.py",
+          "app/repository.py",
+          "app/analytics.py",
+          "app/schemas.py",
+          "app/api/__init__.py",
+          "app/api/routes.py",
+          "app/main.py",
+          "migrations/001_init.sql",
+          "requirements.txt"
+        ],
+        "wrote": [
+          "artifacts_index",
+          "implementation_summary"
+        ],
+        "duration_ms": 13
+      }
+    },
+    {
+      "seq": 19,
+      "ts": 1790137302.589829,
+      "type": "task_started",
+      "task_id": "T-020",
+      "agent": "test",
+      "message": "T-020 Generate an executable test suite from the contract",
+      "data": {
+        "attempt": 1,
+        "parallel_with": [
+          "T-030"
+        ]
+      }
+    },
+    {
+      "seq": 20,
+      "ts": 1790137302.589829,
+      "type": "task_started",
+      "task_id": "T-030",
+      "agent": "documentation",
+      "message": "T-030 Write the architecture decision record and update the README",
+      "data": {
+        "attempt": 1,
+        "parallel_with": [
+          "T-020"
+        ]
+      }
+    },
+    {
+      "seq": 21,
+      "ts": 1790137302.606416,
+      "type": "task_succeeded",
+      "task_id": "T-020",
+      "agent": "test",
+      "message": "T-020 wrote 4 file(s), 202 lines \u2014 Generated a suite from the contract: creation and conflict handling, redirect semantics, expiry, deactivation, scheme and alias validation, route precedence, and the analytics endpoint.",
+      "data": {
+        "artifacts": [
+          "tests/conftest.py",
+          "tests/test_shortcode.py",
+          "tests/test_api.py",
+          "tests/test_analytics.py"
+        ],
+        "wrote": [
+          "test_suite_index"
+        ],
+        "duration_ms": 8
+      }
+    },
+    {
+      "seq": 22,
+      "ts": 1790137302.609177,
+      "type": "task_succeeded",
+      "task_id": "T-030",
+      "agent": "documentation",
+      "message": "T-030 wrote 2 file(s), 83 lines \u2014 Wrote the ADR for the analytics write path and the project README.",
+      "data": {
+        "artifacts": [
+          "docs/adr/001-analytics-off-the-redirect-path.md",
+          "README.md"
+        ],
+        "wrote": [
+          "documentation_index"
+        ],
+        "duration_ms": 4
+      }
+    },
+    {
+      "seq": 23,
+      "ts": 1790137302.609177,
+      "type": "task_started",
+      "task_id": "T-040",
+      "agent": "validation",
+      "message": "T-040 Validate the workspace against the contract and run the suite",
+      "data": {
+        "attempt": 1,
+        "parallel_with": []
+      }
+    },
+    {
+      "seq": 24,
+      "ts": 1790137306.7556133,
+      "type": "task_succeeded",
+      "task_id": "T-040",
+      "agent": "validation",
+      "message": "T-040 round 1: fail \u2014 6 check(s), 3 error(s), 0 warning(s); failed: api_contract, tests",
+      "data": {
+        "artifacts": [
+          "validation-round-1.md",
+          "validation-approach.md"
+        ],
+        "wrote": [
+          "validation_report",
+          "validation_rounds"
+        ],
+        "duration_ms": 4147
+      }
+    },
+    {
+      "seq": 25,
+      "ts": 1790137306.7556133,
+      "type": "validation_failed",
+      "task_id": null,
+      "agent": null,
+      "message": "validation round 1 found 3 error(s); 1 are machine-repairable",
+      "data": {
+        "findings": [
+          "contract declares GET /api/v1/analytics/{code} (Click analytics for a short link) but no route implements it",
+          "failing test: tests/test_analytics.py::test_clicks_are_counted",
+          "failing test: tests/test_analytics.py::test_referrers_are_attributed"
+        ]
+      }
+    },
+    {
+      "seq": 26,
+      "ts": 1790137306.7556133,
+      "type": "graph_mutated",
+      "task_id": "T-900-R1",
+      "agent": "repair",
+      "message": "+T-900-R1 (repair) \u2014 validation round 1",
+      "data": {
+        "depends_on": []
+      }
+    },
+    {
+      "seq": 27,
+      "ts": 1790137306.7556133,
+      "type": "graph_mutated",
+      "task_id": "T-901-R1",
+      "agent": "validation",
+      "message": "+T-901-R1 (validation) \u2014 validation round 1",
+      "data": {
+        "depends_on": [
+          "T-900-R1"
+        ]
+      }
+    },
+    {
+      "seq": 28,
+      "ts": 1790137306.7556133,
+      "type": "repair_scheduled",
+      "task_id": null,
+      "agent": null,
+      "message": "injected T-900-R1 and T-901-R1 into the running graph; moved T-050 behind T-901-R1",
+      "data": {
+        "round": 1,
+        "rewired": [
+          "T-050"
+        ]
+      }
+    },
+    {
+      "seq": 29,
+      "ts": 1790137306.7556133,
+      "type": "approval_requested",
+      "task_id": "T-900-R1",
+      "agent": "repair",
+      "message": "T-900-R1 needs approval (risk=medium)",
+      "data": {}
+    },
+    {
+      "seq": 30,
+      "ts": 1790137306.7556133,
+      "type": "approval_granted",
+      "task_id": "T-900-R1",
+      "agent": null,
+      "message": "T-900-R1 approved by auto-approve",
+      "data": {}
+    },
+    {
+      "seq": 31,
+      "ts": 1790137306.764402,
+      "type": "task_started",
+      "task_id": "T-900-R1",
+      "agent": "repair",
+      "message": "T-900-R1 Repair 1 validation finding(s)",
+      "data": {
+        "attempt": 1,
+        "parallel_with": []
+      }
+    },
+    {
+      "seq": 32,
+      "ts": 1790137306.7732685,
+      "type": "task_succeeded",
+      "task_id": "T-900-R1",
+      "agent": "repair",
+      "message": "T-900-R1 applied 2 edit(s) across 1 file(s) for 1 finding(s) \u2014 Added the analytics route the contract declares, and imported the response model it returns.",
+      "data": {
+        "artifacts": [
+          "app/api/routes.py"
+        ],
+        "wrote": [
+          "artifacts_index",
+          "repair_summary"
+        ],
+        "duration_ms": 8
+      }
+    },
+    {
+      "seq": 33,
+      "ts": 1790137306.7743123,
+      "type": "task_started",
+      "task_id": "T-901-R1",
+      "agent": "validation",
+      "message": "T-901-R1 Re-validate after repair round 1",
+      "data": {
+        "attempt": 1,
+        "parallel_with": []
+      }
+    },
+    {
+      "seq": 34,
+      "ts": 1790137310.5851138,
+      "type": "task_succeeded",
+      "task_id": "T-901-R1",
+      "agent": "validation",
+      "message": "T-901-R1 round 2: pass \u2014 6 check(s), 0 error(s), 0 warning(s)",
+      "data": {
+        "artifacts": [
+          "validation-round-2.md"
+        ],
+        "wrote": [
+          "validation_report",
+          "validation_rounds"
+        ],
+        "duration_ms": 3809
+      }
+    },
+    {
+      "seq": 35,
+      "ts": 1790137310.5861628,
+      "type": "validation_passed",
+      "task_id": null,
+      "agent": null,
+      "message": "validation passed after 1 repair round(s) (6 checks, 0 warning(s))",
+      "data": {
+        "warnings": []
+      }
+    },
+    {
+      "seq": 36,
+      "ts": 1790137310.5870624,
+      "type": "task_started",
+      "task_id": "T-050",
+      "agent": "summary",
+      "message": "T-050 Summarize the run for a human reviewer",
+      "data": {
+        "attempt": 1,
+        "parallel_with": []
+      }
+    },
+    {
+      "seq": 37,
+      "ts": 1790137310.59006,
+      "type": "task_succeeded",
+      "task_id": "T-050",
+      "agent": "summary",
+      "message": "T-050 summarized 11 task(s), 27 artifact(s), 3 open risk(s)",
+      "data": {
+        "artifacts": [
+          "summary.md"
+        ],
+        "wrote": [
+          "run_summary"
+        ],
+        "duration_ms": 5
+      }
+    },
+    {
+      "seq": 38,
+      "ts": 1790137310.59006,
+      "type": "run_finished",
+      "task_id": null,
+      "agent": null,
+      "message": "run succeeded in 8021ms",
+      "data": {
+        "status": "succeeded",
+        "counts": {
+          "succeeded": 11
+        },
+        "artifacts": 28,
+        "repair_rounds": 1
+      }
+    }
+  ],
+  "approvals": [
+    {
+      "task_id": "T-010",
+      "approved": true,
+      "approver": "auto-approve",
+      "reason": "--yes supplied; gate recorded but not blocking",
+      "ts": 1790137302.5719373
+    },
+    {
+      "task_id": "T-900-R1",
+      "approved": true,
+      "approver": "auto-approve",
+      "reason": "--yes supplied; gate recorded but not blocking",
+      "ts": 1790137306.7556133
+    }
+  ],
+  "blackboard_keys": [
+    "api_contract",
+    "architecture",
+    "artifacts_index",
+    "baseline_digests",
+    "documentation_index",
+    "final_validation_report",
+    "implementation_summary",
+    "open_findings",
+    "repair_summary",
+    "requirement",
+    "run_summary",
+    "test_suite_index",
+    "validation_report",
+    "validation_rounds",
+    "work_plan"
+  ],
+  "blackboard": {
+    "baseline_digests": {
+      "type": "json",
+      "value": {}
+    },
+    "requirement": {
+      "type": "NormalizedRequirement",
+      "value": {
+        "raw": "Build a scalable URL shortener service with APIs, persistence, and analytics.",
+        "intent": "A link shortening service: create short codes for long URLs, resolve them quickly, and report how often each one is used.",
+        "kind": "greenfield",
+        "clarity": "clear",
+        "functional": [
+          {
+            "id": "FR-001",
+            "statement": "Create a short code for a submitted long URL",
+            "priority": "must"
+          },
+          {
+            "id": "FR-002",
+            "statement": "Accept an optional caller-supplied custom alias",
+            "priority": "should"
+          },
+          {
+            "id": "FR-003",
+            "statement": "Resolve a short code to its target with an HTTP redirect",
+            "priority": "must"
+          },
+          {
+            "id": "FR-004",
+            "statement": "Support an optional expiry after which a link stops resolving",
+            "priority": "should"
+          },
+          {
+            "id": "FR-005",
+            "statement": "Report per-link click totals, recent activity and top referrers",
+            "priority": "must"
+          },
+          {
+            "id": "FR-006",
+            "statement": "Deactivate a link so it no longer resolves",
+            "priority": "must"
+          },
+          {
+            "id": "FR-007",
+            "statement": "Expose liveness and readiness endpoints for operation",
+            "priority": "should"
+          }
+        ],
+        "non_functional": [
+          {
+            "id": "NFR-001",
+            "category": "performance",
+            "statement": "Redirect latency must stay within a fixed budget at the tail",
+            "target": "p99 < 50ms server-side, excluding network"
+          },
+          {
+            "id": "NFR-002",
+            "category": "scalability",
+            "statement": "Sustain the target redirect rate on commodity hardware",
+            "target": "10k redirects/sec across horizontally scaled instances"
+          },
+          {
+            "id": "NFR-003",
+            "category": "availability",
+            "statement": "Analytics recording must never block or fail a redirect; losing a click is preferable to delaying a user",
+            "target": null
+          },
+          {
+            "id": "NFR-004",
+            "category": "security",
+            "statement": "Reject non-http(s) targets and reserved aliases so short links cannot be used as redirect gadgets",
+            "target": null
+          },
+          {
+            "id": "NFR-005",
+            "category": "observability",
+            "statement": "Expose health and readiness suitable for a load balancer",
+            "target": null
+          }
+        ],
+        "ambiguities": [
+          {
+            "id": "AMB-001",
+            "question": "What read and write volume must this sustain, and over what link corpus?",
+            "why_it_matters": "It decides the storage engine and whether the cache is in-process or shared. Getting it wrong is a rewrite, not a tuning exercise.",
+            "blocking": true,
+            "default_assumption": "10k redirects/sec and 1M links, read-dominant by roughly 100:1"
+          },
+          {
+            "id": "AMB-002",
+            "question": "Are link creation and deletion authenticated, and by whom?",
+            "why_it_matters": "An unauthenticated create endpoint is an open redirect factory and a spam vector.",
+            "blocking": false,
+            "default_assumption": "No authentication in this stage; an owner field is recorded so authorization can be added without a migration"
+          },
+          {
+            "id": "AMB-003",
+            "question": "How long must click events be retained, and at what granularity?",
+            "why_it_matters": "It sets the storage growth rate and the aggregation strategy.",
+            "blocking": false,
+            "default_assumption": "Raw events retained indefinitely at this scale; daily rollups served from a 30-day window"
+          }
+        ],
+        "assumptions": [
+          {
+            "id": "ASM-001",
+            "statement": "10k redirects/sec and 1M links, read-dominant by roughly 100:1",
+            "source": "default",
+            "resolves": "AMB-001"
+          },
+          {
+            "id": "ASM-002",
+            "statement": "No authentication in this stage; an owner field is recorded so authorization can be added without a migration",
+            "source": "default",
+            "resolves": "AMB-002"
+          },
+          {
+            "id": "ASM-003",
+            "statement": "Raw events retained indefinitely at this scale; daily rollups served from a 30-day window",
+            "source": "default",
+            "resolves": "AMB-003"
+          }
+        ],
+        "out_of_scope": [
+          "A web UI; the deliverable is an HTTP API",
+          "Custom domains per tenant",
+          "Malware and phishing classification of submitted targets",
+          "Billing, quotas and rate limiting"
+        ]
+      }
+    },
+    "architecture": {
+      "type": "Architecture",
+      "value": {
+        "style": "Modular monolith with cache-aside reads and an asynchronous analytics writer",
+        "summary": "One deployable with hard internal seams. The redirect path is the only latency-critical path, so it is the one that gets a cache in front of it and nothing synchronous behind it. Everything the redirect does not need \u2014 recording the click, aggregating it, serving reports \u2014 happens off that path. Storage and cache are reached through narrow interfaces so the sqlite and in-process implementations can be replaced by Postgres and Redis without touching the handlers.",
+        "components": [
+          {
+            "name": "HTTP API",
+            "responsibility": "Validate input, map domain errors to status codes, serve redirects",
+            "technology": "FastAPI",
+            "scales": "stateless"
+          },
+          {
+            "name": "Shortcode generator",
+            "responsibility": "Produce and validate base62 codes; reject reserved paths",
+            "technology": "Python stdlib secrets",
+            "scales": "stateless"
+          },
+          {
+            "name": "Read cache",
+            "responsibility": "Serve code to target lookups without touching storage",
+            "technology": "In-process LRU with TTL",
+            "scales": "stateful"
+          },
+          {
+            "name": "URL repository",
+            "responsibility": "Persist links, handle alias collisions, enforce expiry",
+            "technology": "sqlite3 behind a repository interface",
+            "scales": "stateless"
+          },
+          {
+            "name": "Analytics recorder",
+            "responsibility": "Buffer click events on a bounded queue and flush them in batches from a background thread",
+            "technology": "Python threading and queue",
+            "scales": "stateful"
+          },
+          {
+            "name": "Click repository",
+            "responsibility": "Persist click events and answer aggregate queries",
+            "technology": "sqlite3",
+            "scales": "stateless"
+          },
+          {
+            "name": "Database",
+            "responsibility": "Durable storage for links and clicks",
+            "technology": "sqlite3 in WAL mode",
+            "scales": "managed"
+          }
+        ],
+        "data_flows": [
+          {
+            "source": "Client",
+            "target": "HTTP API",
+            "description": "POST a long URL, receive a short code",
+            "synchronous": true
+          },
+          {
+            "source": "HTTP API",
+            "target": "Read cache",
+            "description": "Resolve a code, falling through to storage on a miss",
+            "synchronous": true
+          },
+          {
+            "source": "HTTP API",
+            "target": "Analytics recorder",
+            "description": "Enqueue a click event and return immediately",
+            "synchronous": false
+          },
+          {
+            "source": "Analytics recorder",
+            "target": "Click repository",
+            "description": "Flush buffered events in batches on an interval",
+            "synchronous": false
+          }
+        ],
+        "trade_offs": [
+          {
+            "decision": "How short codes are generated",
+            "chosen": "Random base62 with a bounded collision retry",
+            "alternatives": [
+              "Monotonic counter encoded to base62",
+              "Hash of the target URL truncated to n characters"
+            ],
+            "rationale": "A counter makes every link enumerable, which exposes every customer's links to anyone who can count. A hash makes identical targets collide into one code, so one deletion breaks unrelated links.",
+            "accepted_cost": "Collisions must be detected and retried, and code length has to grow with the corpus to keep the collision rate negligible."
+          },
+          {
+            "decision": "Where click recording happens",
+            "chosen": "Off the redirect path, on a bounded queue with a background flusher",
+            "alternatives": [
+              "Write the click inline before redirecting",
+              "Publish to an external durable queue"
+            ],
+            "rationale": "An inline write makes redirect latency a function of database load, which violates the one budget users actually feel. A durable broker is the right end state but adds an operational dependency this stage does not justify.",
+            "accepted_cost": "Clicks buffered in memory are lost on an unclean shutdown, and under sustained overload events are dropped rather than queued without bound."
+          },
+          {
+            "decision": "Storage engine",
+            "chosen": "sqlite3 behind a repository interface",
+            "alternatives": [
+              "PostgreSQL from the start",
+              "A managed key-value store"
+            ],
+            "rationale": "The interface, not the engine, is the durable decision. sqlite keeps the system runnable with no infrastructure while the seam that allows Postgres to replace it is exercised from day one.",
+            "accepted_cost": "Single-writer contention means sqlite will not reach the stated throughput target; it is a development and evaluation engine, and the migration is required before production."
+          },
+          {
+            "decision": "Redirect status code",
+            "chosen": "302 Found",
+            "alternatives": [
+              "301 Moved Permanently"
+            ],
+            "rationale": "A 301 is cached by the browser, so subsequent clicks never reach the service and are never counted. That silently destroys the analytics product the requirement asks for.",
+            "accepted_cost": "Every click costs a round trip; the service cannot shed that load to browser caches."
+          }
+        ],
+        "risks": [
+          {
+            "id": "RISK-001",
+            "description": "Buffered click events are lost if the process dies",
+            "likelihood": "medium",
+            "impact": "medium",
+            "mitigation": "Flush on shutdown, keep the interval short, and expose the dropped counter; move to a durable queue before analytics become billable"
+          },
+          {
+            "id": "RISK-002",
+            "description": "sqlite write contention will not sustain the target redirect rate",
+            "likelihood": "high",
+            "impact": "high",
+            "mitigation": "Repository interface is the seam; migrate to Postgres with a shared Redis cache before any load beyond evaluation"
+          },
+          {
+            "id": "RISK-003",
+            "description": "The service can be used to launder links to malicious targets",
+            "likelihood": "medium",
+            "impact": "high",
+            "mitigation": "Scheme validation rejects non-http(s) targets today; reputation checking and authenticated creation are required before public use"
+          },
+          {
+            "id": "RISK-004",
+            "description": "A deleted link keeps resolving from a stale cache entry",
+            "likelihood": "low",
+            "impact": "medium",
+            "mitigation": "Deletion invalidates the cache entry in the same request"
+          }
+        ],
+        "diagram": "graph LR\n    Client -->|POST /api/v1/urls| API[HTTP API]\n    Client -->|GET /{code}| API\n    API --> Cache[LRU + TTL cache]\n    Cache -.miss.-> Urls[URL repository]\n    Urls --> DB[(sqlite WAL)]\n    API -.enqueue, non-blocking.-> Recorder[Analytics recorder]\n    Recorder -.batched flush.-> Clicks[Click repository]\n    Clicks --> DB"
+      }
+    },
+    "api_contract": {
+      "type": "ApiContract",
+      "value": {
+        "title": "URL Shortener",
+        "version": "1.0.0",
+        "endpoints": [
+          {
+            "method": "POST",
+            "path": "/api/v1/urls",
+            "summary": "Create a short link",
+            "covers": [
+              "FR-001",
+              "FR-002",
+              "FR-004"
+            ],
+            "request_model": "CreateUrlRequest",
+            "response_model": "ShortUrlResponse",
+            "status_codes": [
+              201,
+              409,
+              422
+            ]
+          },
+          {
+            "method": "GET",
+            "path": "/api/v1/urls/{code}",
+            "summary": "Read link metadata without resolving it",
+            "covers": [
+              "FR-001"
+            ],
+            "request_model": null,
+            "response_model": "ShortUrlResponse",
+            "status_codes": [
+              200,
+              404
+            ]
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/v1/urls/{code}",
+            "summary": "Deactivate a link",
+            "covers": [
+              "FR-006"
+            ],
+            "request_model": null,
+            "response_model": null,
+            "status_codes": [
+              204,
+              404
+            ]
+          },
+          {
+            "method": "GET",
+            "path": "/api/v1/analytics/{code}",
+            "summary": "Click analytics for a short link",
+            "covers": [
+              "FR-005"
+            ],
+            "request_model": null,
+            "response_model": "AnalyticsResponse",
+            "status_codes": [
+              200,
+              404
+            ]
+          },
+          {
+            "method": "GET",
+            "path": "/healthz",
+            "summary": "Liveness",
+            "covers": [
+              "FR-007"
+            ],
+            "request_model": null,
+            "response_model": "HealthResponse",
+            "status_codes": [
+              200
+            ]
+          },
+          {
+            "method": "GET",
+            "path": "/readyz",
+            "summary": "Readiness, including database reachability",
+            "covers": [
+              "FR-007"
+            ],
+            "request_model": null,
+            "response_model": "HealthResponse",
+            "status_codes": [
+              200,
+              503
+            ]
+          },
+          {
+            "method": "GET",
+            "path": "/{code}",
+            "summary": "Resolve a short code and redirect",
+            "covers": [
+              "FR-003"
+            ],
+            "request_model": null,
+            "response_model": null,
+            "status_codes": [
+              302,
+              404
+            ]
+          }
+        ]
+      }
+    },
+    "work_plan": {
+      "type": "WorkPlan",
+      "value": {
+        "strategy": "Build, test and document from the approved contract. Implementation is one task rather than several because the modules share a composition root and splitting them would create tasks that cannot be validated independently. Tests and documentation do not depend on each other, so they are scheduled as siblings and run concurrently. Validation is a separate node, not a step inside implementation, because an agent must not be the judge of its own output.",
+        "tasks": [
+          {
+            "id": "T-010",
+            "title": "Implement the service from the architecture and contract",
+            "agent": "implementation",
+            "depends_on": [],
+            "covers": [
+              "FR-001",
+              "FR-002",
+              "FR-003"
+            ],
+            "reads": [
+              "api_contract",
+              "architecture"
+            ],
+            "writes": [
+              "artifacts_index",
+              "implementation_summary"
+            ],
+            "risk": "medium",
+            "rationale": "Writes source into the workspace, so it is gated for human approval"
+          },
+          {
+            "id": "T-020",
+            "title": "Generate an executable test suite from the contract",
+            "agent": "test",
+            "depends_on": [
+              "T-010"
+            ],
+            "covers": [
+              "FR-005"
+            ],
+            "reads": [
+              "artifacts_index",
+              "api_contract"
+            ],
+            "writes": [
+              "test_suite_index"
+            ],
+            "risk": "low",
+            "rationale": "Tests are written against the contract, not against the implementation"
+          },
+          {
+            "id": "T-030",
+            "title": "Write the architecture decision record and update the README",
+            "agent": "documentation",
+            "depends_on": [
+              "T-010"
+            ],
+            "covers": [
+              "FR-007"
+            ],
+            "reads": [
+              "architecture",
+              "api_contract"
+            ],
+            "writes": [
+              "documentation_index"
+            ],
+            "risk": "low",
+            "rationale": "Independent of the test suite, so it runs alongside it"
+          },
+          {
+            "id": "T-040",
+            "title": "Validate the workspace against the contract and run the suite",
+            "agent": "validation",
+            "depends_on": [
+              "T-020",
+              "T-030"
+            ],
+            "covers": [],
+            "reads": [
+              "artifacts_index"
+            ],
+            "writes": [
+              "validation_report"
+            ],
+            "risk": "low",
+            "rationale": "Independent verification; findings become new graph nodes"
+          },
+          {
+            "id": "T-050",
+            "title": "Summarize the run for a human reviewer",
+            "agent": "summary",
+            "depends_on": [
+              "T-040"
+            ],
+            "covers": [],
+            "reads": [
+              "requirement"
+            ],
+            "writes": [
+              "run_summary"
+            ],
+            "risk": "low",
+            "rationale": "Reports what was decided, what was verified and what is still open"
+          }
+        ],
+        "parallelism_note": "T-020 and T-030 are independent; the critical path is implementation -> tests -> validation."
+      }
+    },
+    "artifacts_index": {
+      "type": "json",
+      "value": {
+        "app/__init__.py": {
+          "id": "app/__init__.py",
+          "kind": "code",
+          "produced_by": "T-010",
+          "sha256": "3f91bc12e772",
+          "lines": 2,
+          "covers": []
+        },
+        "app/config.py": {
+          "id": "app/config.py",
+          "kind": "code",
+          "produced_by": "T-010",
+          "sha256": "8714d2bf315e",
+          "lines": 20,
+          "covers": []
+        },
+        "app/models.py": {
+          "id": "app/models.py",
+          "kind": "code",
+          "produced_by": "T-010",
+          "sha256": "39d2b5f1482c",
+          "lines": 34,
+          "covers": []
+        },
+        "app/db.py": {
+          "id": "app/db.py",
+          "kind": "code",
+          "produced_by": "T-010",
+          "sha256": "73bd006b7079",
+          "lines": 81,
+          "covers": []
+        },
+        "app/shortcode.py": {
+          "id": "app/shortcode.py",
+          "kind": "code",
+          "produced_by": "T-010",
+          "sha256": "30f50bbad9d7",
+          "lines": 48,
+          "covers": [
+            "FR-001",
+            "FR-002"
+          ]
+        },
+        "app/cache.py": {
+          "id": "app/cache.py",
+          "kind": "code",
+          "produced_by": "T-010",
+          "sha256": "fa0da99217c3",
+          "lines": 64,
+          "covers": [
+            "NFR-001"
+          ]
+        },
+        "app/repository.py": {
+          "id": "app/repository.py",
+          "kind": "code",
+          "produced_by": "T-010",
+          "sha256": "9c88f225dc77",
+          "lines": 128,
+          "covers": [
+            "FR-001",
+            "FR-004",
+            "FR-006"
+          ]
+        },
+        "app/analytics.py": {
+          "id": "app/analytics.py",
+          "kind": "code",
+          "produced_by": "T-010",
+          "sha256": "3f646574430a",
+          "lines": 105,
+          "covers": [
+            "FR-005"
+          ]
+        },
+        "app/schemas.py": {
+          "id": "app/schemas.py",
+          "kind": "code",
+          "produced_by": "T-010",
+          "sha256": "ac1bb696fe74",
+          "lines": 42,
+          "covers": [
+            "NFR-004"
+          ]
+        },
+        "app/api/__init__.py": {
+          "id": "app/api/__init__.py",
+          "kind": "code",
+          "produced_by": "T-010",
+          "sha256": "c7966c248067",
+          "lines": 4,
+          "covers": []
+        },
+        "app/api/routes.py": {
+          "id": "app/api/routes.py",
+          "kind": "code",
+          "produced_by": "T-900-R1",
+          "sha256": "8e4c41145650",
+          "lines": 107,
+          "covers": [
+            "FR-001",
+            "FR-002",
+            "FR-003",
+            "FR-006",
+            "FR-007"
+          ]
+        },
+        "app/main.py": {
+          "id": "app/main.py",
+          "kind": "code",
+          "produced_by": "T-010",
+          "sha256": "858b00243189",
+          "lines": 54,
+          "covers": [
+            "FR-007"
+          ]
+        },
+        "migrations/001_init.sql": {
+          "id": "migrations/001_init.sql",
+          "kind": "migration",
+          "produced_by": "T-010",
+          "sha256": "2ce638f88bfc",
+          "lines": 34,
+          "covers": []
+        },
+        "requirements.txt": {
+          "id": "requirements.txt",
+          "kind": "doc",
+          "produced_by": "T-010",
+          "sha256": "b775207e2e2c",
+          "lines": 6,
+          "covers": []
+        }
+      }
+    },
+    "implementation_summary": {
+      "type": "json",
+      "value": {
+        "summary": "Implemented the service as a FastAPI application over sqlite3: base62 code generation with collision retry, a cache-aside read path, expiry and deactivation, and a background analytics writer fed by a bounded queue.",
+        "notes": [
+          "The catch-all /{code} route is registered last so it cannot shadow /healthz or /api/*.",
+          "Analytics recording is enqueued, never awaited, so a slow write cannot delay a redirect."
+        ],
+        "paths": [
+          "app/__init__.py",
+          "app/config.py",
+          "app/models.py",
+          "app/db.py",
+          "app/shortcode.py",
+          "app/cache.py",
+          "app/repository.py",
+          "app/analytics.py",
+          "app/schemas.py",
+          "app/api/__init__.py",
+          "app/api/routes.py",
+          "app/main.py",
+          "migrations/001_init.sql",
+          "requirements.txt"
+        ]
+      }
+    },
+    "test_suite_index": {
+      "type": "json",
+      "value": {
+        "tests/conftest.py": {
+          "id": "tests/conftest.py",
+          "kind": "test",
+          "produced_by": "T-020",
+          "sha256": "7d549ef0f08f",
+          "lines": 29,
+          "covers": []
+        },
+        "tests/test_shortcode.py": {
+          "id": "tests/test_shortcode.py",
+          "kind": "test",
+          "produced_by": "T-020",
+          "sha256": "af091fcd655e",
+          "lines": 37,
+          "covers": []
+        },
+        "tests/test_api.py": {
+          "id": "tests/test_api.py",
+          "kind": "test",
+          "produced_by": "T-020",
+          "sha256": "dad9c51bc17a",
+          "lines": 77,
+          "covers": []
+        },
+        "tests/test_analytics.py": {
+          "id": "tests/test_analytics.py",
+          "kind": "test",
+          "produced_by": "T-020",
+          "sha256": "a7dbf417eb95",
+          "lines": 59,
+          "covers": [
+            "FR-005"
+          ]
+        }
+      }
+    },
+    "documentation_index": {
+      "type": "json",
+      "value": {
+        "docs/adr/001-analytics-off-the-redirect-path.md": {
+          "id": "docs/adr/001-analytics-off-the-redirect-path.md",
+          "kind": "doc",
+          "produced_by": "T-030",
+          "sha256": "99dede436ef9",
+          "lines": 36,
+          "covers": []
+        },
+        "README.md": {
+          "id": "README.md",
+          "kind": "doc",
+          "produced_by": "T-030",
+          "sha256": "55ff866e3982",
+          "lines": 47,
+          "covers": [
+            "FR-007"
+          ]
+        }
+      }
+    },
+    "validation_report": {
+      "type": "json",
+      "value": null
+    },
+    "validation_rounds": {
+      "type": "json",
+      "value": 2
+    },
+    "open_findings": {
+      "type": "json",
+      "value": []
+    },
+    "repair_summary": {
+      "type": "json",
+      "value": {
+        "summary": "Added the analytics route the contract declares, and imported the response model it returns.",
+        "edits": [
+          {
+            "path": "app/api/routes.py",
+            "action": "replace",
+            "addresses": "contract declares GET /api/v1/analytics/{code} (Click analytics for a short link) but no route implements it"
+          },
+          {
+            "path": "app/api/routes.py",
+            "action": "append",
+            "addresses": "contract declares GET /api/v1/analytics/{code} (Click analytics for a short link) but no route implements it"
+          }
+        ],
+        "unrepairable": [],
+        "findings_in": 1
+      }
+    },
+    "final_validation_report": {
+      "type": "ValidationReport",
+      "value": {
+        "status": "pass",
+        "checks": [
+          {
+            "name": "structure",
+            "status": "pass",
+            "findings": [],
+            "detail": "3/3 required paths present",
+            "duration_ms": 2
+          },
+          {
+            "name": "syntax",
+            "status": "pass",
+            "findings": [],
+            "detail": "parsed 16 python file(s)",
+            "duration_ms": 25
+          },
+          {
+            "name": "guardrails",
+            "status": "pass",
+            "findings": [],
+            "detail": "no forbidden operations found",
+            "duration_ms": 39
+          },
+          {
+            "name": "api_contract",
+            "status": "pass",
+            "findings": [],
+            "detail": "7/7 declared endpoints implemented",
+            "duration_ms": 32
+          },
+          {
+            "name": "traceability",
+            "status": "pass",
+            "findings": [],
+            "detail": "4/4 must-have requirements covered",
+            "duration_ms": 0
+          },
+          {
+            "name": "tests",
+            "status": "pass",
+            "findings": [],
+            "detail": "36 passed, 0 failed, 0 skipped in 3705ms",
+            "duration_ms": 3706
+          }
+        ],
+        "attempt": 2
+      }
+    },
+    "run_summary": {
+      "type": "RunSummary",
+      "value": {
+        "headline": "A link shortening service: create short codes for long URLs, resolve them quickly, and report how often each one is used. \u2014 27 artifact(s) from 10 completed task(s)",
+        "what_was_built": [
+          "16 source and test file(s), 891 lines",
+          "7 endpoint(s) under contract v1.0.0",
+          "architecture: Modular monolith with cache-aside reads and an asynchronous analytics writer"
+        ],
+        "key_decisions": [
+          "How short codes are generated: chose Random base62 with a bounded collision retry \u2014 Collisions must be detected and retried, and code length has to grow with the corpus to keep the collision rate negligible.",
+          "Where click recording happens: chose Off the redirect path, on a bounded queue with a background flusher \u2014 Clicks buffered in memory are lost on an unclean shutdown, and under sustained overload events are dropped rather than queued without bound.",
+          "Storage engine: chose sqlite3 behind a repository interface \u2014 Single-writer contention means sqlite will not reach the stated throughput target; it is a development and evaluation engine, and the migration is required before production.",
+          "Redirect status code: chose 302 Found \u2014 Every click costs a round trip; the service cannot shed that load to browser caches."
+        ],
+        "open_risks": [
+          "RISK-001 (medium): Buffered click events are lost if the process dies \u2014 Flush on shutdown, keep the interval short, and expose the dropped counter; move to a durable queue before analytics become billable",
+          "RISK-002 (high): sqlite write contention will not sustain the target redirect rate \u2014 Repository interface is the seam; migrate to Postgres with a shared Redis cache before any load beyond evaluation",
+          "RISK-003 (high): The service can be used to launder links to malicious targets \u2014 Scheme validation rejects non-http(s) targets today; reputation checking and authenticated creation are required before public use"
+        ],
+        "next_steps": [
+          "Confirm the assumption behind AMB-001: 10k redirects/sec and 1M links, read-dominant by roughly 100:1",
+          "Confirm the assumption behind AMB-002: No authentication in this stage; an owner field is recorded so authorization can be added without a migration",
+          "Confirm the assumption behind AMB-003: Raw events retained indefinitely at this scale; daily rollups served from a 30-day window",
+          "Out of scope, still unbuilt: A web UI; the deliverable is an HTTP API",
+          "Out of scope, still unbuilt: Custom domains per tenant",
+          "Out of scope, still unbuilt: Malware and phishing classification of submitted targets"
+        ],
+        "limitations": [
+          "Correctness is established only as far as the suite asserts it (36 passed, 0 failed, 0 skipped in 3705ms). A passing suite bounds risk; it does not eliminate it.",
+          "No performance, load or security testing was run, so any latency, throughput or security target in the requirements is design intent rather than a measured result.",
+          "Contract conformance is structural: every declared endpoint exists, but request and response bodies are not schema-validated against the published spec.",
+          "3 requirement(s) were resolved by an assumed default rather than by a human answer; if any of those assumptions is wrong, the design built on it is wrong.",
+          "Deliberately out of scope: A web UI; the deliverable is an HTTP API; Custom domains per tenant; Malware and phishing classification of submitted targets; Billing, quotas and rate limiting.",
+          "The deliverable is a prototype. It has not been deployed, so migrations, startup and shutdown are untested outside the test harness."
+        ]
+      }
+    }
+  }
+}
