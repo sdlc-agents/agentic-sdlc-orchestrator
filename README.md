@@ -52,6 +52,11 @@ python -m asep url_shortener --no-assume    # halts, exits non-zero
 Step 2 is the one worth doing. The platform claims the generated suite passes;
 step 2 is you verifying that without taking its word for it.
 
+If you have twenty minutes rather than an afternoon, read
+[`docs/walkthrough.md`](docs/walkthrough.md) — it follows one requirement
+through decomposition, execution, validation and every human gate, citing the
+committed artifacts at each step.
+
 Then read [`runs/<run-id>/summary.md`](examples/greenfield/summary.md) — the
 implementation plan and why each task exists, every artifact with the
 requirements it claims to cover, the decisions and what they cost, the open
@@ -386,6 +391,8 @@ python -m asep url_shortener --resume <run-id> --answer 'AMB-001=...'  # continu
 
 ## Further reading
 
+- [`docs/walkthrough.md`](docs/walkthrough.md) — **start here**: one requirement
+  traced through every stage, with real artifacts from a committed run
 - [`docs/architecture.md`](docs/architecture.md) — components, execution model,
   control flow, and the key design decisions with what each one costs
 - [`docs/orchestration.md`](docs/orchestration.md) — the execution loop, the
