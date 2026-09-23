@@ -1,0 +1,28 @@
+$ python -m asep url_shortener --no-assume
+
+  **  run c6b39dd3 (mock mode, 4 tasks)
+  ??  run halted: blocking ambiguities require a human answer
+        questions: AMB-001: What read and write volume must this sustain, and over what link corpus? (matters because It decides the storage engine and whether the cache is in-process or shared. Getting it wrong is a rewrite, not a tuning exercise.)
+  **  run needs_clarification in 13ms
+
+========================================================================
+  Greenfield — build a URL shortener
+  run c6b39dd3  |  provider mock:deterministic-blueprint  |  13ms
+========================================================================
+
+  tasks
+    pending              4
+
+  artifacts
+    total lines          0
+
+  status:    needs_clarification
+  workspace: <project>\examples\ambiguous\_run\c6b39dd3\workspace
+  run dir:   <project>\examples\ambiguous\_run\c6b39dd3
+  trace:     <project>\examples\ambiguous\_run\c6b39dd3\trace.jsonl  (4 events)
+
+  The run stopped because it will not guess. Answer and re-run:
+    - AMB-001: What read and write volume must this sustain, and over what link corpus? (matters because It decides the storage engine and whether the cache is in-process or shared. Getting it wrong is a rewrite, not a tuning exercise.)
+
+    asep url_shortener --answer 'AMB-001=your answer'
+

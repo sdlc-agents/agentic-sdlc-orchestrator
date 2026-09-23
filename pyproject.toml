@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "asep"
+version = "0.1.0"
+description = "An orchestrated multi-agent platform that turns a requirement into a validated change set"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "pydantic>=2.6",
+]
+
+[project.optional-dependencies]
+# The generated suite runs inside the platform, so these are what the
+# *deliverable* needs in order to be executed and verified.
+run = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.29",
+    "httpx>=0.27",
+    "pytest>=7.4",
+]
+openai = ["openai>=1.30"]
+dev = [
+    "pytest>=7.4",
+    "fastapi>=0.110",
+    "httpx>=0.27",
+    "ruff>=0.4",
+    "coverage>=7.4",
+]
+
+[project.scripts]
+asep = "asep.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["asep*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "slow: end-to-end runs that execute the generated test suite in a subprocess",
+]
+filterwarnings = ["error::DeprecationWarning:asep.*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = [
+    "E501",  # long lines are reported by the formatter, not the linter
+    "B008",  # FastAPI dependency injection idiom in generated code
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Blueprint bodies are source code stored as string literals.
+"asep/providers/blueprints/*.py" = ["E501", "W291"]
+# SIM905 wants list literals; for a 100-word stopword list, split() reads better.
+"asep/tools/impact.py" = ["SIM905"]
+"tests/*" = ["B011"]

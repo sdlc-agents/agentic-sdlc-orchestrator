@@ -1,0 +1,107 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.10", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Lint
+        run: ruff check asep tests scripts
+
+      # The generated suite is executed inside these tests, so a green run here
+      # means the platform produced code that actually works — not merely that
+      # it produced code.
+      - name: Test
+        run: pytest -q
+
+      # Coverage is enforced rather than reported: the CLI was once at 0%, which
+      # a number nobody gates on would never have surfaced.
+      - name: Coverage
+        if: matrix.python-version == '3.12' && matrix.os == 'ubuntu-latest'
+        run: |
+          pip install coverage
+          coverage run --source=asep --omit="asep/providers/blueprints/*,asep/providers/responses/*" -m pytest -q
+          coverage report --fail-under=90
+
+  scenarios:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      # Every kind of work the platform claims to support, end to end. Each
+      # exits non-zero unless its own validation passed.
+      - name: Build (greenfield)
+        run: python -m asep url_shortener --out runs
+
+      - name: Enhancement
+        run: python -m asep analytics_upgrade --out runs
+
+      - name: Bug fix
+        run: python -m asep fix_expiry_bug --out runs
+
+      - name: Refactor
+        run: python -m asep extract_service_layer --out runs
+
+      - name: Test improvement
+        run: python -m asep raise_test_coverage --out runs
+
+      - name: Documentation
+        run: python -m asep document_the_service --out runs
+
+      # A well-defined requirement must not stop for a human even when the
+      # platform is told to refuse every assumption.
+      - name: Well-defined requirement runs unattended
+        run: python -m asep fix_expiry_bug --no-assume --out runs
+
+      - name: The legacy sample must be reproducible from the blueprint
+        run: |
+          python scripts/derive_legacy_sample.py
+          git diff --exit-code -- sample_codebase
+
+      # The committed examples are evidence; they must still be producible.
+      - name: The committed examples must regenerate
+        run: python scripts/generate_examples.py
+
+      - name: Upload run records
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: run-records
+          path: runs/
+          retention-days: 7

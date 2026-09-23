@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.env
+.pytest_cache/
+.ruff_cache/
+
+# Run records are outputs, not sources. examples/ holds committed sample runs
+# and is deliberately not ignored; regenerate it with
+# scripts/generate_examples.py.
+runs/
+*.db

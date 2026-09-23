@@ -1,0 +1,90 @@
+openapi: 3.0.3
+info:
+  title: URL Shortener
+  version: 1.0.0
+  description: >
+    Create short links, resolve them with a cache-aside read path, and report
+paths:
+  /api/v1/urls:
+    post:
+      summary: Create a short URL
+      operationId: createUrl
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUrlRequest'
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShortUrlResponse'
+        '409': { description: custom_code already in use }
+        '422': { description: invalid target url or alias }
+  /api/v1/urls/{code}:
+    get:
+      summary: Fetch short URL metadata
+      operationId: getUrl
+      parameters:
+        - { name: code, in: path, required: true, schema: { type: string } }
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShortUrlResponse'
+        '404': { description: unknown code }
+    delete:
+      summary: Deactivate a short URL
+      operationId: deleteUrl
+      parameters:
+        - { name: code, in: path, required: true, schema: { type: string } }
+      responses:
+        '204': { description: deactivated }
+        '404': { description: unknown code }
+  /healthz:
+    get:
+      summary: Liveness probe
+      operationId: healthz
+      responses:
+        '200': { description: ok }
+  /readyz:
+    get:
+      summary: Readiness probe, including database reachability
+      operationId: readyz
+      responses:
+        '200': { description: ready }
+        '503': { description: dependency unavailable }
+  /{code}:
+    get:
+      summary: Resolve a short code and redirect
+      operationId: redirect
+      parameters:
+        - { name: code, in: path, required: true, schema: { type: string } }
+      responses:
+        '302': { description: redirect to the target url }
+        '404': { description: unknown or expired code }
+components:
+  schemas:
+    CreateUrlRequest:
+      type: object
+      required: [long_url]
+      properties:
+        long_url: { type: string, format: uri }
+        custom_code: { type: string, minLength: 4, maxLength: 16 }
+        ttl_seconds: { type: integer, minimum: 60 }
+        owner: { type: string }
+    ShortUrlResponse:
+      type: object
+      required: [code, short_url, long_url, created_at]
+      properties:
+        code: { type: string }
+        short_url: { type: string }
+        long_url: { type: string }
+        created_at: { type: number }
+        expires_at: { type: number, nullable: true }
+        active: { type: boolean }

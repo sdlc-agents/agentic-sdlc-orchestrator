@@ -1,0 +1,26 @@
+graph TD
+    T-001["T-001<br/>Normalize the requirement and surface what it does not say"]
+    T-002["T-002<br/>Analyze the existing codebase and compute the blast radius"]
+    T-003["T-003<br/>Design the change against the existing structure"]
+    T-004["T-004<br/>Define the contract for the new surface"]
+    T-005["T-005<br/>Plan the change and inject it into the running graph"]
+    T-010["T-010<br/>Add click recording, storage and the analytics read model"]
+    T-020["T-020<br/>Generate an executable test suite from the contract"]
+    T-030["T-030<br/>Write the architecture decision record and update the README"]
+    T-040["T-040<br/>Validate the workspace against the contract and run the suite"]
+    T-050["T-050<br/>Summarize the run for a human reviewer"]
+    T-900-R1["T-900-R1<br/>Repair 1 validation finding(s)"]
+    T-901-R1["T-901-R1<br/>Re-validate after repair round 1"]
+    T-001 --> T-002
+    T-002 --> T-003
+    T-002 --> T-004
+    T-003 --> T-005
+    T-004 --> T-005
+    T-005 --> T-010
+    T-010 --> T-020
+    T-010 --> T-030
+    T-020 --> T-040
+    T-030 --> T-040
+    T-040 --> T-050
+    T-901-R1 --> T-050
+    T-900-R1 --> T-901-R1
