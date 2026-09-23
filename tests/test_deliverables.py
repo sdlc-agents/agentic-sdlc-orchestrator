@@ -364,3 +364,55 @@ class TestCommittedExamples:
                 if e["type"] == "task_started" and e["data"].get("parallel_with")
             ]
             assert concurrent, f"{name}: nothing ran concurrently"
+
+
+class TestWalkthrough:
+    """The walkthrough is the assessor's entry point; its claims must be true.
+
+    A document that cites figures which have since drifted is worse than no
+    document, so the load-bearing ones are pinned here.
+    """
+
+    ROOT = Path(__file__).resolve().parents[1]
+
+    @pytest.fixture(scope="class")
+    def text(self):
+        return (self.ROOT / "docs" / "walkthrough.md").read_text(encoding="utf-8")
+
+    def test_it_exists_and_is_linked_from_the_readme(self, text):
+        assert text
+        readme = (self.ROOT / "README.md").read_text(encoding="utf-8")
+        assert "docs/walkthrough.md" in readme
+
+    def test_it_covers_every_stage_the_brief_asks_about(self, text):
+        for stage in (
+            "Decomposed into an engineering problem",
+            "Designed, two stages running concurrently",
+            "Decomposed into executable graph nodes",
+            "Built, under a human gate",
+            "Validated by something that did not write it",
+            "Repaired, then re-validated",
+            "Reported for a reviewer",
+        ):
+            assert stage in text, stage
+
+    def test_the_figures_it_quotes_match_the_committed_run(self, text):
+        import json
+
+        metrics = json.loads(
+            (self.ROOT / "examples" / "greenfield" / "metrics.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        assert f"| {metrics['tasks']['planned']} / {metrics['tasks']['injected_at_runtime']} |" in text
+        assert (
+            f"| {metrics['oversight']['approvals_requested']} / "
+            f"{metrics['oversight']['approvals_denied']} |" in text
+        )
+        assert f"| {metrics['output']['artifacts']} /" in text
+
+    def test_every_artifact_it_links_to_is_committed(self, text):
+        import re
+
+        for rel in re.findall(r"\]\(\.\./(examples/[^)]+)\)", text):
+            assert (self.ROOT / rel).exists(), f"walkthrough links a missing file: {rel}"
