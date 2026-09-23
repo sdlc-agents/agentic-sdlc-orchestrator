@@ -5,11 +5,11 @@
 | Check | Status | Detail | Time |
 | --- | --- | --- | --- |
 | structure | pass | 3/3 required paths present | 2ms |
-| syntax | pass | parsed 16 python file(s) | 45ms |
-| guardrails | pass | no forbidden operations found | 84ms |
-| api_contract | fail | 0/1 declared endpoints implemented | 34ms |
+| syntax | pass | parsed 16 python file(s) | 54ms |
+| guardrails | pass | no forbidden operations found | 79ms |
+| api_contract | fail | 0/1 declared endpoints implemented | 40ms |
 | traceability | pass | 3/3 must-have requirements covered | 0ms |
-| tests | fail | 34 passed, 2 failed, 0 skipped in 3868ms | 3869ms |
+| tests | fail | 34 passed, 2 failed, 0 skipped in 4980ms | 4982ms |
 
 ## Errors
 

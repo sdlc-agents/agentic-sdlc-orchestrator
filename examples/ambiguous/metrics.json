@@ -1,0 +1,68 @@
+{
+  "run_id": "fdf173b1",
+  "scenario": "url_shortener",
+  "status": "needs_clarification",
+  "duration_ms": 20,
+  "first_pass_yield": false,
+  "tasks": {
+    "planned": 4,
+    "injected_at_runtime": 0,
+    "succeeded": 0,
+    "failed": 0,
+    "skipped": 0,
+    "rejected": 0
+  },
+  "reliability": {
+    "retries": 0,
+    "escalations": 0,
+    "repair_rounds": 0
+  },
+  "oversight": {
+    "approvals_requested": 0,
+    "approvals_denied": 0
+  },
+  "validation": {
+    "rounds": 0,
+    "checks_run": 0,
+    "checks_failed": 0,
+    "findings_by_severity": {}
+  },
+  "output": {
+    "artifacts": 0,
+    "lines": 0
+  },
+  "agents": {
+    "api_design": {
+      "invocations": 1,
+      "succeeded": 0,
+      "failed": 0,
+      "retries": 0,
+      "total_ms": 0,
+      "mean_ms": 0
+    },
+    "architecture": {
+      "invocations": 1,
+      "succeeded": 0,
+      "failed": 0,
+      "retries": 0,
+      "total_ms": 0,
+      "mean_ms": 0
+    },
+    "planner": {
+      "invocations": 1,
+      "succeeded": 0,
+      "failed": 0,
+      "retries": 0,
+      "total_ms": 0,
+      "mean_ms": 0
+    },
+    "requirement": {
+      "invocations": 1,
+      "succeeded": 0,
+      "failed": 0,
+      "retries": 0,
+      "total_ms": 0,
+      "mean_ms": 0
+    }
+  }
+}

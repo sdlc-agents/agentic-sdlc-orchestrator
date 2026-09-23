@@ -1,11 +1,11 @@
 {
-  "run_id": "48f8a9ca",
+  "run_id": "7f194be3",
   "requirement": "Build a scalable URL shortener service with APIs, persistence, and analytics.",
   "scenario": "url_shortener",
   "mode": "mock",
   "status": "succeeded",
-  "started_at": 1790137302.5681622,
-  "finished_at": 1790137310.59006,
+  "started_at": 1790143868.3899412,
+  "finished_at": 1790143879.186816,
   "tasks": {
     "T-001": {
       "id": "T-001",
@@ -24,7 +24,7 @@
       "max_attempts": 2,
       "origin": "plan",
       "error": null,
-      "duration_ms": 1,
+      "duration_ms": 2,
       "artifact_ids": [
         "docs/requirements.md"
       ]
@@ -50,7 +50,7 @@
       "max_attempts": 2,
       "origin": "plan",
       "error": null,
-      "duration_ms": 2,
+      "duration_ms": 5,
       "artifact_ids": [
         "docs/architecture.md"
       ]
@@ -76,7 +76,7 @@
       "max_attempts": 2,
       "origin": "plan",
       "error": null,
-      "duration_ms": 2,
+      "duration_ms": 3,
       "artifact_ids": [
         "openapi.yaml"
       ]
@@ -105,7 +105,7 @@
       "max_attempts": 2,
       "origin": "plan",
       "error": null,
-      "duration_ms": 1,
+      "duration_ms": 2,
       "artifact_ids": [
         "docs/plan.md"
       ]
@@ -137,7 +137,7 @@
       "max_attempts": 2,
       "origin": "plan",
       "error": null,
-      "duration_ms": 13,
+      "duration_ms": 26,
       "artifact_ids": [
         "app/__init__.py",
         "app/config.py",
@@ -179,7 +179,7 @@
       "max_attempts": 2,
       "origin": "plan",
       "error": null,
-      "duration_ms": 8,
+      "duration_ms": 10,
       "artifact_ids": [
         "tests/conftest.py",
         "tests/test_shortcode.py",
@@ -239,7 +239,7 @@
       "max_attempts": 2,
       "origin": "plan",
       "error": null,
-      "duration_ms": 4147,
+      "duration_ms": 6145,
       "artifact_ids": [
         "validation-round-1.md",
         "validation-approach.md"
@@ -267,7 +267,7 @@
       "max_attempts": 2,
       "origin": "plan",
       "error": null,
-      "duration_ms": 5,
+      "duration_ms": 6,
       "artifact_ids": [
         "summary.md"
       ]
@@ -318,7 +318,7 @@
       "max_attempts": 2,
       "origin": "repair",
       "error": null,
-      "duration_ms": 3809,
+      "duration_ms": 4554,
       "artifact_ids": [
         "validation-round-2.md"
       ]
@@ -615,7 +615,7 @@
       "id": "validation-round-1.md",
       "kind": "report",
       "path": "validation-round-1.md",
-      "content": "# Validation round 1\n\n**Result: FAIL** \u2014 3 error(s), 0 warning(s), 1 machine-repairable.\n\n| Check | Status | Detail | Time |\n| --- | --- | --- | --- |\n| structure | pass | 3/3 required paths present | 0ms |\n| syntax | pass | parsed 16 python file(s) | 23ms |\n| guardrails | pass | no forbidden operations found | 61ms |\n| api_contract | fail | 6/7 declared endpoints implemented | 24ms |\n| traceability | pass | 4/4 must-have requirements covered | 0ms |\n| tests | fail | 34 passed, 2 failed, 0 skipped in 3973ms | 3975ms |\n\n## Errors\n\n- **api_contract** \u2014 contract declares GET /api/v1/analytics/{code} (Click analytics for a short link) but no route implements it\n  - file: `app/api/routes.py`\n  - repair: add a route handler for GET /api/v1/analytics/{code} to app/api/routes.py returning AnalyticsResponse, and import that model\n- **tests** \u2014 failing test: tests/test_analytics.py::test_clicks_are_counted\n  - file: `tests/test_analytics.py`\n  - repair: no machine-actionable hint; needs a human\n- **tests** \u2014 failing test: tests/test_analytics.py::test_referrers_are_attributed\n  - file: `tests/test_analytics.py`\n  - repair: no machine-actionable hint; needs a human\n",
+      "content": "# Validation round 1\n\n**Result: FAIL** \u2014 3 error(s), 0 warning(s), 1 machine-repairable.\n\n| Check | Status | Detail | Time |\n| --- | --- | --- | --- |\n| structure | pass | 3/3 required paths present | 0ms |\n| syntax | pass | parsed 16 python file(s) | 25ms |\n| guardrails | pass | no forbidden operations found | 51ms |\n| api_contract | fail | 6/7 declared endpoints implemented | 32ms |\n| traceability | pass | 4/4 must-have requirements covered | 0ms |\n| tests | fail | 34 passed, 2 failed, 0 skipped in 5964ms | 5966ms |\n\n## Errors\n\n- **api_contract** \u2014 contract declares GET /api/v1/analytics/{code} (Click analytics for a short link) but no route implements it\n  - file: `app/api/routes.py`\n  - repair: add a route handler for GET /api/v1/analytics/{code} to app/api/routes.py returning AnalyticsResponse, and import that model\n- **tests** \u2014 failing test: tests/test_analytics.py::test_clicks_are_counted\n  - file: `tests/test_analytics.py`\n  - repair: no machine-actionable hint; needs a human\n- **tests** \u2014 failing test: tests/test_analytics.py::test_referrers_are_attributed\n  - file: `tests/test_analytics.py`\n  - repair: no machine-actionable hint; needs a human\n",
       "produced_by": "T-040",
       "covers": [],
       "language": "markdown",
@@ -635,7 +635,7 @@
       "id": "validation-round-2.md",
       "kind": "report",
       "path": "validation-round-2.md",
-      "content": "# Validation round 2\n\n**Result: PASS** \u2014 0 error(s), 0 warning(s), 0 machine-repairable.\n\n| Check | Status | Detail | Time |\n| --- | --- | --- | --- |\n| structure | pass | 3/3 required paths present | 2ms |\n| syntax | pass | parsed 16 python file(s) | 25ms |\n| guardrails | pass | no forbidden operations found | 39ms |\n| api_contract | pass | 7/7 declared endpoints implemented | 32ms |\n| traceability | pass | 4/4 must-have requirements covered | 0ms |\n| tests | pass | 36 passed, 0 failed, 0 skipped in 3705ms | 3706ms |\n",
+      "content": "# Validation round 2\n\n**Result: PASS** \u2014 0 error(s), 0 warning(s), 0 machine-repairable.\n\n| Check | Status | Detail | Time |\n| --- | --- | --- | --- |\n| structure | pass | 3/3 required paths present | 3ms |\n| syntax | pass | parsed 16 python file(s) | 31ms |\n| guardrails | pass | no forbidden operations found | 45ms |\n| api_contract | pass | 7/7 declared endpoints implemented | 44ms |\n| traceability | pass | 4/4 must-have requirements covered | 0ms |\n| tests | pass | 36 passed, 0 failed, 0 skipped in 4426ms | 4427ms |\n",
       "produced_by": "T-901-R1",
       "covers": [],
       "language": "markdown",
@@ -645,7 +645,7 @@
       "id": "summary.md",
       "kind": "report",
       "path": "summary.md",
-      "content": "# Run summary\n\n**Run `48f8a9ca` \u2014 succeeded** in 8021ms\n\n> Build a scalable URL shortener service with APIs, persistence, and analytics.\n\nA link shortening service: create short codes for long URLs, resolve them quickly, and report how often each one is used. \u2014 28 artifact(s) from 11 completed task(s)\n\n## Implementation plan and rationale\n\nBuild, test and document from the approved contract. Implementation is one task rather than several because the modules share a composition root and splitting them would create tasks that cannot be validated independently. Tests and documentation do not depend on each other, so they are scheduled as siblings and run concurrently. Validation is a separate node, not a step inside implementation, because an agent must not be the judge of its own output.\n\n**Sequencing.** T-020 and T-030 are independent; the critical path is implementation -> tests -> validation.\n\nEach task below states why it exists. Tasks marked `repair` were not planned \u2014 the engine added them to the running graph after validation found a defect.\n\n| Task | Why it is in the plan |\n| --- | --- |\n| T-001 | Everything downstream traces to the ids this task assigns |\n| T-002 | Independent of the API contract, so the two are designed concurrently |\n| T-003 | Derived from the requirements, not from the architecture; validation later holds the implementation to it |\n| T-004 | Needs both the design and the contract before it can decompose work |\n| T-010 | Writes source into the workspace, so it is gated for human approval |\n| T-020 | Tests are written against the contract, not against the implementation |\n| T-030 | Independent of the test suite, so it runs alongside it |\n| T-040 | Independent verification; findings become new graph nodes |\n| T-050 | Reports what was decided, what was verified and what is still open |\n| T-900-R1 | scheduled by the engine from structured validation findings |\n| T-901-R1 | closes the loop; a repair is not trusted until re-checked |\n\n## Execution\n\n| Status | Tasks |\n| --- | --- |\n| succeeded | 11 |\n\n| Task | Agent | Status | Origin | Attempts | Time |\n| --- | --- | --- | --- | --- | --- |\n| T-001 | `requirement` | succeeded | plan | 1 | 1ms |\n| T-002 | `architecture` | succeeded | plan | 1 | 2ms |\n| T-003 | `api_design` | succeeded | plan | 1 | 2ms |\n| T-004 | `planner` | succeeded | plan | 1 | 1ms |\n| T-010 | `implementation` | succeeded | plan | 1 | 13ms |\n| T-020 | `test` | succeeded | plan | 1 | 8ms |\n| T-030 | `documentation` | succeeded | plan | 1 | 4ms |\n| T-040 | `validation` | succeeded | plan | 1 | 4147ms |\n| T-050 | `summary` | succeeded | plan | 1 | 5ms |\n| T-900-R1 | `repair` | succeeded | repair | 1 | 8ms |\n| T-901-R1 | `validation` | succeeded | repair | 1 | 3809ms |\n\n## Approvals\n\n| Task | Decision | Approver | Reason |\n| --- | --- | --- | --- |\n| T-010 | approved | auto-approve | --yes supplied; gate recorded but not blocking |\n| T-900-R1 | approved | auto-approve | --yes supplied; gate recorded but not blocking |\n\n## What was built\n\n- 16 source and test file(s), 891 lines\n- 7 endpoint(s) under contract v1.0.0\n- architecture: Modular monolith with cache-aside reads and an asynchronous analytics writer\n\n### Generated artifacts\n\nEvery file this run produced, with the task that produced it and the requirements it claims to cover. A claim of coverage is traceability, not proof.\n\n| Artifact | Kind | Lines | Produced by | Covers |\n| --- | --- | --- | --- | --- |\n| `openapi.yaml` | api_spec | 60 | T-003 | FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007 |\n| `app/__init__.py` | code | 2 | T-010 | \u2014 |\n| `app/analytics.py` | code | 105 | T-010 | FR-005 |\n| `app/api/__init__.py` | code | 4 | T-010 | \u2014 |\n| `app/api/routes.py` | code | 107 | T-900-R1 | FR-001, FR-002, FR-003, FR-006, FR-007 |\n| `app/cache.py` | code | 64 | T-010 | NFR-001 |\n| `app/config.py` | code | 20 | T-010 | \u2014 |\n| `app/db.py` | code | 81 | T-010 | \u2014 |\n| `app/main.py` | code | 54 | T-010 | FR-007 |\n| `app/models.py` | code | 34 | T-010 | \u2014 |\n| `app/repository.py` | code | 128 | T-010 | FR-001, FR-004, FR-006 |\n| `app/schemas.py` | code | 42 | T-010 | NFR-004 |\n| `app/shortcode.py` | code | 48 | T-010 | FR-001, FR-002 |\n| `README.md` | doc | 47 | T-030 | FR-007 |\n| `docs/adr/001-analytics-off-the-redirect-path.md` | doc | 36 | T-030 | \u2014 |\n| `docs/architecture.md` | doc | 90 | T-002 | \u2014 |\n| `docs/plan.md` | doc | 37 | T-004 | \u2014 |\n| `docs/requirements.md` | doc | 63 | T-001 | FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, NFR-001, NFR-002, NFR-003, NFR-004, NFR-005 |\n| `requirements.txt` | doc | 6 | T-010 | \u2014 |\n| `migrations/001_init.sql` | migration | 34 | T-010 | \u2014 |\n| `summary.md` | report | 159 | T-050 | \u2014 |\n| `validation-approach.md` | report | 47 | T-040 | \u2014 |\n| `validation-round-1.md` | report | 25 | T-040 | \u2014 |\n| `validation-round-2.md` | report | 13 | T-901-R1 | \u2014 |\n| `tests/conftest.py` | test | 29 | T-020 | \u2014 |\n| `tests/test_analytics.py` | test | 59 | T-020 | FR-005 |\n| `tests/test_api.py` | test | 77 | T-020 | \u2014 |\n| `tests/test_shortcode.py` | test | 37 | T-020 | \u2014 |\n\n## Decisions and what they cost\n\n- How short codes are generated: chose Random base62 with a bounded collision retry \u2014 Collisions must be detected and retried, and code length has to grow with the corpus to keep the collision rate negligible.\n- Where click recording happens: chose Off the redirect path, on a bounded queue with a background flusher \u2014 Clicks buffered in memory are lost on an unclean shutdown, and under sustained overload events are dropped rather than queued without bound.\n- Storage engine: chose sqlite3 behind a repository interface \u2014 Single-writer contention means sqlite will not reach the stated throughput target; it is a development and evaluation engine, and the migration is required before production.\n- Redirect status code: chose 302 Found \u2014 Every click costs a round trip; the service cannot shed that load to browser caches.\n\n## Repairs\n\nAdded the analytics route the contract declares, and imported the response model it returns.\n\n- `app/api/routes.py` (replace) \u2014 contract declares GET /api/v1/analytics/{code} (Click analytics for a short link) but no route implements it\n- `app/api/routes.py` (append) \u2014 contract declares GET /api/v1/analytics/{code} (Click analytics for a short link) but no route implements it\n\n## Verification\n\nValidation pass after 2 round(s). These checks parsed the files on disk and executed the generated suite; none of them asked an agent whether its own work was correct.\n\n| Check | Status | Detail |\n| --- | --- | --- |\n| structure | pass | 3/3 required paths present |\n| syntax | pass | parsed 16 python file(s) |\n| guardrails | pass | no forbidden operations found |\n| api_contract | pass | 7/7 declared endpoints implemented |\n| traceability | pass | 4/4 must-have requirements covered |\n| tests | pass | 36 passed, 0 failed, 0 skipped in 3705ms |\n\n## Open risks\n\n- RISK-001 (medium): Buffered click events are lost if the process dies \u2014 Flush on shutdown, keep the interval short, and expose the dropped counter; move to a durable queue before analytics become billable\n- RISK-002 (high): sqlite write contention will not sustain the target redirect rate \u2014 Repository interface is the seam; migrate to Postgres with a shared Redis cache before any load beyond evaluation\n- RISK-003 (high): The service can be used to launder links to malicious targets \u2014 Scheme validation rejects non-http(s) targets today; reputation checking and authenticated creation are required before public use\n\n## Assumptions this run made\n\n- **default** (AMB-001): 10k redirects/sec and 1M links, read-dominant by roughly 100:1\n- **default** (AMB-002): No authentication in this stage; an owner field is recorded so authorization can be added without a migration\n- **default** (AMB-003): Raw events retained indefinitely at this scale; daily rollups served from a 30-day window\n\n## Limitations\n\nWhat this run does not establish. Stated because a report that only lists what passed invites the reader to assume the rest was covered.\n\n- Correctness is established only as far as the suite asserts it (36 passed, 0 failed, 0 skipped in 3705ms). A passing suite bounds risk; it does not eliminate it.\n- No performance, load or security testing was run, so any latency, throughput or security target in the requirements is design intent rather than a measured result.\n- Contract conformance is structural: every declared endpoint exists, but request and response bodies are not schema-validated against the published spec.\n- 3 requirement(s) were resolved by an assumed default rather than by a human answer; if any of those assumptions is wrong, the design built on it is wrong.\n- Deliberately out of scope: A web UI; the deliverable is an HTTP API; Custom domains per tenant; Malware and phishing classification of submitted targets; Billing, quotas and rate limiting.\n- The deliverable is a prototype. It has not been deployed, so migrations, startup and shutdown are untested outside the test harness.\n\nThe full validation approach \u2014 the test strategy, what each check proves, and what none of them can see \u2014 is in `validation-approach.md` beside this file.\n\n## Next steps\n\n- Confirm the assumption behind AMB-001: 10k redirects/sec and 1M links, read-dominant by roughly 100:1\n- Confirm the assumption behind AMB-002: No authentication in this stage; an owner field is recorded so authorization can be added without a migration\n- Confirm the assumption behind AMB-003: Raw events retained indefinitely at this scale; daily rollups served from a 30-day window\n- Out of scope, still unbuilt: A web UI; the deliverable is an HTTP API\n- Out of scope, still unbuilt: Custom domains per tenant\n- Out of scope, still unbuilt: Malware and phishing classification of submitted targets\n",
+      "content": "# Run summary\n\n**Run `7f194be3` \u2014 succeeded** in 10796ms\n\n> Build a scalable URL shortener service with APIs, persistence, and analytics.\n\nA link shortening service: create short codes for long URLs, resolve them quickly, and report how often each one is used. \u2014 28 artifact(s) from 11 completed task(s)\n\n## Implementation plan and rationale\n\nBuild, test and document from the approved contract. Implementation is one task rather than several because the modules share a composition root and splitting them would create tasks that cannot be validated independently. Tests and documentation do not depend on each other, so they are scheduled as siblings and run concurrently. Validation is a separate node, not a step inside implementation, because an agent must not be the judge of its own output.\n\n**Sequencing.** T-020 and T-030 are independent; the critical path is implementation -> tests -> validation.\n\nEach task below states why it exists. Tasks marked `repair` were not planned \u2014 the engine added them to the running graph after validation found a defect.\n\n| Task | Why it is in the plan |\n| --- | --- |\n| T-001 | Everything downstream traces to the ids this task assigns |\n| T-002 | Independent of the API contract, so the two are designed concurrently |\n| T-003 | Derived from the requirements, not from the architecture; validation later holds the implementation to it |\n| T-004 | Needs both the design and the contract before it can decompose work |\n| T-010 | Writes source into the workspace, so it is gated for human approval |\n| T-020 | Tests are written against the contract, not against the implementation |\n| T-030 | Independent of the test suite, so it runs alongside it |\n| T-040 | Independent verification; findings become new graph nodes |\n| T-050 | Reports what was decided, what was verified and what is still open |\n| T-900-R1 | scheduled by the engine from structured validation findings |\n| T-901-R1 | closes the loop; a repair is not trusted until re-checked |\n\n## Execution\n\n| Status | Tasks |\n| --- | --- |\n| succeeded | 11 |\n\n| Task | Agent | Status | Origin | Attempts | Time |\n| --- | --- | --- | --- | --- | --- |\n| T-001 | `requirement` | succeeded | plan | 1 | 2ms |\n| T-002 | `architecture` | succeeded | plan | 1 | 5ms |\n| T-003 | `api_design` | succeeded | plan | 1 | 3ms |\n| T-004 | `planner` | succeeded | plan | 1 | 2ms |\n| T-010 | `implementation` | succeeded | plan | 1 | 26ms |\n| T-020 | `test` | succeeded | plan | 1 | 10ms |\n| T-030 | `documentation` | succeeded | plan | 1 | 4ms |\n| T-040 | `validation` | succeeded | plan | 1 | 6145ms |\n| T-050 | `summary` | succeeded | plan | 1 | 6ms |\n| T-900-R1 | `repair` | succeeded | repair | 1 | 8ms |\n| T-901-R1 | `validation` | succeeded | repair | 1 | 4554ms |\n\n## Approvals\n\n| Task | Decision | Approver | Reason |\n| --- | --- | --- | --- |\n| T-010 | approved | auto-approve | --yes supplied; gate recorded but not blocking |\n| T-900-R1 | approved | auto-approve | --yes supplied; gate recorded but not blocking |\n\n## What was built\n\n- 16 source and test file(s), 891 lines\n- 7 endpoint(s) under contract v1.0.0\n- architecture: Modular monolith with cache-aside reads and an asynchronous analytics writer\n\n### Generated artifacts\n\nEvery file this run produced, with the task that produced it and the requirements it claims to cover. A claim of coverage is traceability, not proof.\n\n| Artifact | Kind | Lines | Produced by | Covers |\n| --- | --- | --- | --- | --- |\n| `openapi.yaml` | api_spec | 60 | T-003 | FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007 |\n| `app/__init__.py` | code | 2 | T-010 | \u2014 |\n| `app/analytics.py` | code | 105 | T-010 | FR-005 |\n| `app/api/__init__.py` | code | 4 | T-010 | \u2014 |\n| `app/api/routes.py` | code | 107 | T-900-R1 | FR-001, FR-002, FR-003, FR-006, FR-007 |\n| `app/cache.py` | code | 64 | T-010 | NFR-001 |\n| `app/config.py` | code | 20 | T-010 | \u2014 |\n| `app/db.py` | code | 81 | T-010 | \u2014 |\n| `app/main.py` | code | 54 | T-010 | FR-007 |\n| `app/models.py` | code | 34 | T-010 | \u2014 |\n| `app/repository.py` | code | 128 | T-010 | FR-001, FR-004, FR-006 |\n| `app/schemas.py` | code | 42 | T-010 | NFR-004 |\n| `app/shortcode.py` | code | 48 | T-010 | FR-001, FR-002 |\n| `README.md` | doc | 47 | T-030 | FR-007 |\n| `docs/adr/001-analytics-off-the-redirect-path.md` | doc | 36 | T-030 | \u2014 |\n| `docs/architecture.md` | doc | 90 | T-002 | \u2014 |\n| `docs/plan.md` | doc | 37 | T-004 | \u2014 |\n| `docs/requirements.md` | doc | 63 | T-001 | FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, NFR-001, NFR-002, NFR-003, NFR-004, NFR-005 |\n| `requirements.txt` | doc | 6 | T-010 | \u2014 |\n| `migrations/001_init.sql` | migration | 34 | T-010 | \u2014 |\n| `summary.md` | report | 159 | T-050 | \u2014 |\n| `validation-approach.md` | report | 47 | T-040 | \u2014 |\n| `validation-round-1.md` | report | 25 | T-040 | \u2014 |\n| `validation-round-2.md` | report | 13 | T-901-R1 | \u2014 |\n| `tests/conftest.py` | test | 29 | T-020 | \u2014 |\n| `tests/test_analytics.py` | test | 59 | T-020 | FR-005 |\n| `tests/test_api.py` | test | 77 | T-020 | \u2014 |\n| `tests/test_shortcode.py` | test | 37 | T-020 | \u2014 |\n\n## Decisions and what they cost\n\n- How short codes are generated: chose Random base62 with a bounded collision retry \u2014 Collisions must be detected and retried, and code length has to grow with the corpus to keep the collision rate negligible.\n- Where click recording happens: chose Off the redirect path, on a bounded queue with a background flusher \u2014 Clicks buffered in memory are lost on an unclean shutdown, and under sustained overload events are dropped rather than queued without bound.\n- Storage engine: chose sqlite3 behind a repository interface \u2014 Single-writer contention means sqlite will not reach the stated throughput target; it is a development and evaluation engine, and the migration is required before production.\n- Redirect status code: chose 302 Found \u2014 Every click costs a round trip; the service cannot shed that load to browser caches.\n\n## Repairs\n\nAdded the analytics route the contract declares, and imported the response model it returns.\n\n- `app/api/routes.py` (replace) \u2014 contract declares GET /api/v1/analytics/{code} (Click analytics for a short link) but no route implements it\n- `app/api/routes.py` (append) \u2014 contract declares GET /api/v1/analytics/{code} (Click analytics for a short link) but no route implements it\n\n## Verification\n\nValidation pass after 2 round(s). These checks parsed the files on disk and executed the generated suite; none of them asked an agent whether its own work was correct.\n\n| Check | Status | Detail |\n| --- | --- | --- |\n| structure | pass | 3/3 required paths present |\n| syntax | pass | parsed 16 python file(s) |\n| guardrails | pass | no forbidden operations found |\n| api_contract | pass | 7/7 declared endpoints implemented |\n| traceability | pass | 4/4 must-have requirements covered |\n| tests | pass | 36 passed, 0 failed, 0 skipped in 4426ms |\n\n## Open risks\n\n- RISK-001 (medium): Buffered click events are lost if the process dies \u2014 Flush on shutdown, keep the interval short, and expose the dropped counter; move to a durable queue before analytics become billable\n- RISK-002 (high): sqlite write contention will not sustain the target redirect rate \u2014 Repository interface is the seam; migrate to Postgres with a shared Redis cache before any load beyond evaluation\n- RISK-003 (high): The service can be used to launder links to malicious targets \u2014 Scheme validation rejects non-http(s) targets today; reputation checking and authenticated creation are required before public use\n\n## Assumptions this run made\n\n- **default** (AMB-001): 10k redirects/sec and 1M links, read-dominant by roughly 100:1\n- **default** (AMB-002): No authentication in this stage; an owner field is recorded so authorization can be added without a migration\n- **default** (AMB-003): Raw events retained indefinitely at this scale; daily rollups served from a 30-day window\n\n## Limitations\n\nWhat this run does not establish. Stated because a report that only lists what passed invites the reader to assume the rest was covered.\n\n- Correctness is established only as far as the suite asserts it (36 passed, 0 failed, 0 skipped in 4426ms). A passing suite bounds risk; it does not eliminate it.\n- No performance, load or security testing was run, so any latency, throughput or security target in the requirements is design intent rather than a measured result.\n- Contract conformance is structural: every declared endpoint exists, but request and response bodies are not schema-validated against the published spec.\n- 3 requirement(s) were resolved by an assumed default rather than by a human answer; if any of those assumptions is wrong, the design built on it is wrong.\n- Deliberately out of scope: A web UI; the deliverable is an HTTP API; Custom domains per tenant; Malware and phishing classification of submitted targets; Billing, quotas and rate limiting.\n- The deliverable is a prototype. It has not been deployed, so migrations, startup and shutdown are untested outside the test harness.\n\nThe full validation approach \u2014 the test strategy, what each check proves, and what none of them can see \u2014 is in `validation-approach.md` beside this file.\n\n## Next steps\n\n- Confirm the assumption behind AMB-001: 10k redirects/sec and 1M links, read-dominant by roughly 100:1\n- Confirm the assumption behind AMB-002: No authentication in this stage; an owner field is recorded so authorization can be added without a migration\n- Confirm the assumption behind AMB-003: Raw events retained indefinitely at this scale; daily rollups served from a 30-day window\n- Out of scope, still unbuilt: A web UI; the deliverable is an HTTP API\n- Out of scope, still unbuilt: Custom domains per tenant\n- Out of scope, still unbuilt: Malware and phishing classification of submitted targets\n",
       "produced_by": "T-050",
       "covers": [],
       "language": "markdown",
@@ -655,11 +655,11 @@
   "events": [
     {
       "seq": 1,
-      "ts": 1790137302.5687842,
+      "ts": 1790143868.3899412,
       "type": "run_started",
       "task_id": null,
       "agent": null,
-      "message": "run 48f8a9ca (mock mode, 4 tasks)",
+      "message": "run 7f194be3 (mock mode, 4 tasks)",
       "data": {
         "tasks": 4,
         "levels": 3,
@@ -672,7 +672,7 @@
     },
     {
       "seq": 2,
-      "ts": 1790137302.5687842,
+      "ts": 1790143868.3899412,
       "type": "task_started",
       "task_id": "T-001",
       "agent": "requirement",
@@ -684,7 +684,7 @@
     },
     {
       "seq": 3,
-      "ts": 1790137302.5707958,
+      "ts": 1790143868.3954177,
       "type": "task_succeeded",
       "task_id": "T-001",
       "agent": "requirement",
@@ -696,12 +696,12 @@
         "wrote": [
           "requirement"
         ],
-        "duration_ms": 1
+        "duration_ms": 2
       }
     },
     {
       "seq": 4,
-      "ts": 1790137302.5719373,
+      "ts": 1790143868.3954177,
       "type": "task_started",
       "task_id": "T-002",
       "agent": "architecture",
@@ -715,7 +715,7 @@
     },
     {
       "seq": 5,
-      "ts": 1790137302.5719373,
+      "ts": 1790143868.3954177,
       "type": "task_started",
       "task_id": "T-003",
       "agent": "api_design",
@@ -729,7 +729,7 @@
     },
     {
       "seq": 6,
-      "ts": 1790137302.5719373,
+      "ts": 1790143868.4057782,
       "type": "task_succeeded",
       "task_id": "T-002",
       "agent": "architecture",
@@ -741,12 +741,12 @@
         "wrote": [
           "architecture"
         ],
-        "duration_ms": 2
+        "duration_ms": 5
       }
     },
     {
       "seq": 7,
-      "ts": 1790137302.5719373,
+      "ts": 1790143868.4068573,
       "type": "task_succeeded",
       "task_id": "T-003",
       "agent": "api_design",
@@ -758,12 +758,12 @@
         "wrote": [
           "api_contract"
         ],
-        "duration_ms": 2
+        "duration_ms": 3
       }
     },
     {
       "seq": 8,
-      "ts": 1790137302.5719373,
+      "ts": 1790143868.4079208,
       "type": "task_started",
       "task_id": "T-004",
       "agent": "planner",
@@ -775,7 +775,7 @@
     },
     {
       "seq": 9,
-      "ts": 1790137302.5719373,
+      "ts": 1790143868.4111412,
       "type": "task_succeeded",
       "task_id": "T-004",
       "agent": "planner",
@@ -787,12 +787,12 @@
         "wrote": [
           "work_plan"
         ],
-        "duration_ms": 1
+        "duration_ms": 2
       }
     },
     {
       "seq": 10,
-      "ts": 1790137302.5719373,
+      "ts": 1790143868.4111412,
       "type": "graph_mutated",
       "task_id": "T-010",
       "agent": "implementation",
@@ -805,7 +805,7 @@
     },
     {
       "seq": 11,
-      "ts": 1790137302.5719373,
+      "ts": 1790143868.4116666,
       "type": "graph_mutated",
       "task_id": "T-020",
       "agent": "test",
@@ -818,7 +818,7 @@
     },
     {
       "seq": 12,
-      "ts": 1790137302.5719373,
+      "ts": 1790143868.4116666,
       "type": "graph_mutated",
       "task_id": "T-030",
       "agent": "documentation",
@@ -831,7 +831,7 @@
     },
     {
       "seq": 13,
-      "ts": 1790137302.5719373,
+      "ts": 1790143868.412399,
       "type": "graph_mutated",
       "task_id": "T-040",
       "agent": "validation",
@@ -845,7 +845,7 @@
     },
     {
       "seq": 14,
-      "ts": 1790137302.5719373,
+      "ts": 1790143868.412399,
       "type": "graph_mutated",
       "task_id": "T-050",
       "agent": "summary",
@@ -859,7 +859,7 @@
     },
     {
       "seq": 15,
-      "ts": 1790137302.5719373,
+      "ts": 1790143868.412399,
       "type": "approval_requested",
       "task_id": "T-010",
       "agent": "implementation",
@@ -868,7 +868,7 @@
     },
     {
       "seq": 16,
-      "ts": 1790137302.5719373,
+      "ts": 1790143868.413197,
       "type": "approval_granted",
       "task_id": "T-010",
       "agent": null,
@@ -877,7 +877,7 @@
     },
     {
       "seq": 17,
-      "ts": 1790137302.5719373,
+      "ts": 1790143868.4137275,
       "type": "task_started",
       "task_id": "T-010",
       "agent": "implementation",
@@ -889,7 +889,7 @@
     },
     {
       "seq": 18,
-      "ts": 1790137302.589829,
+      "ts": 1790143868.4406,
       "type": "task_succeeded",
       "task_id": "T-010",
       "agent": "implementation",
@@ -915,12 +915,12 @@
           "artifacts_index",
           "implementation_summary"
         ],
-        "duration_ms": 13
+        "duration_ms": 26
       }
     },
     {
       "seq": 19,
-      "ts": 1790137302.589829,
+      "ts": 1790143868.4411929,
       "type": "task_started",
       "task_id": "T-020",
       "agent": "test",
@@ -934,7 +934,7 @@
     },
     {
       "seq": 20,
-      "ts": 1790137302.589829,
+      "ts": 1790143868.4417288,
       "type": "task_started",
       "task_id": "T-030",
       "agent": "documentation",
@@ -948,7 +948,7 @@
     },
     {
       "seq": 21,
-      "ts": 1790137302.606416,
+      "ts": 1790143868.4517558,
       "type": "task_succeeded",
       "task_id": "T-020",
       "agent": "test",
@@ -963,12 +963,12 @@
         "wrote": [
           "test_suite_index"
         ],
-        "duration_ms": 8
+        "duration_ms": 10
       }
     },
     {
       "seq": 22,
-      "ts": 1790137302.609177,
+      "ts": 1790143868.4517558,
       "type": "task_succeeded",
       "task_id": "T-030",
       "agent": "documentation",
@@ -986,7 +986,7 @@
     },
     {
       "seq": 23,
-      "ts": 1790137302.609177,
+      "ts": 1790143868.4517558,
       "type": "task_started",
       "task_id": "T-040",
       "agent": "validation",
@@ -998,7 +998,7 @@
     },
     {
       "seq": 24,
-      "ts": 1790137306.7556133,
+      "ts": 1790143874.599349,
       "type": "task_succeeded",
       "task_id": "T-040",
       "agent": "validation",
@@ -1012,12 +1012,12 @@
           "validation_report",
           "validation_rounds"
         ],
-        "duration_ms": 4147
+        "duration_ms": 6145
       }
     },
     {
       "seq": 25,
-      "ts": 1790137306.7556133,
+      "ts": 1790143874.6013558,
       "type": "validation_failed",
       "task_id": null,
       "agent": null,
@@ -1032,7 +1032,7 @@
     },
     {
       "seq": 26,
-      "ts": 1790137306.7556133,
+      "ts": 1790143874.6033676,
       "type": "graph_mutated",
       "task_id": "T-900-R1",
       "agent": "repair",
@@ -1043,7 +1043,7 @@
     },
     {
       "seq": 27,
-      "ts": 1790137306.7556133,
+      "ts": 1790143874.6033676,
       "type": "graph_mutated",
       "task_id": "T-901-R1",
       "agent": "validation",
@@ -1056,7 +1056,7 @@
     },
     {
       "seq": 28,
-      "ts": 1790137306.7556133,
+      "ts": 1790143874.605384,
       "type": "repair_scheduled",
       "task_id": null,
       "agent": null,
@@ -1070,7 +1070,7 @@
     },
     {
       "seq": 29,
-      "ts": 1790137306.7556133,
+      "ts": 1790143874.605384,
       "type": "approval_requested",
       "task_id": "T-900-R1",
       "agent": "repair",
@@ -1079,7 +1079,7 @@
     },
     {
       "seq": 30,
-      "ts": 1790137306.7556133,
+      "ts": 1790143874.605384,
       "type": "approval_granted",
       "task_id": "T-900-R1",
       "agent": null,
@@ -1088,7 +1088,7 @@
     },
     {
       "seq": 31,
-      "ts": 1790137306.764402,
+      "ts": 1790143874.605384,
       "type": "task_started",
       "task_id": "T-900-R1",
       "agent": "repair",
@@ -1100,7 +1100,7 @@
     },
     {
       "seq": 32,
-      "ts": 1790137306.7732685,
+      "ts": 1790143874.6138017,
       "type": "task_succeeded",
       "task_id": "T-900-R1",
       "agent": "repair",
@@ -1118,7 +1118,7 @@
     },
     {
       "seq": 33,
-      "ts": 1790137306.7743123,
+      "ts": 1790143874.6138017,
       "type": "task_started",
       "task_id": "T-901-R1",
       "agent": "validation",
@@ -1130,7 +1130,7 @@
     },
     {
       "seq": 34,
-      "ts": 1790137310.5851138,
+      "ts": 1790143879.172986,
       "type": "task_succeeded",
       "task_id": "T-901-R1",
       "agent": "validation",
@@ -1143,12 +1143,12 @@
           "validation_report",
           "validation_rounds"
         ],
-        "duration_ms": 3809
+        "duration_ms": 4554
       }
     },
     {
       "seq": 35,
-      "ts": 1790137310.5861628,
+      "ts": 1790143879.172986,
       "type": "validation_passed",
       "task_id": null,
       "agent": null,
@@ -1159,7 +1159,7 @@
     },
     {
       "seq": 36,
-      "ts": 1790137310.5870624,
+      "ts": 1790143879.172986,
       "type": "task_started",
       "task_id": "T-050",
       "agent": "summary",
@@ -1171,7 +1171,7 @@
     },
     {
       "seq": 37,
-      "ts": 1790137310.59006,
+      "ts": 1790143879.186816,
       "type": "task_succeeded",
       "task_id": "T-050",
       "agent": "summary",
@@ -1183,16 +1183,16 @@
         "wrote": [
           "run_summary"
         ],
-        "duration_ms": 5
+        "duration_ms": 6
       }
     },
     {
       "seq": 38,
-      "ts": 1790137310.59006,
+      "ts": 1790143879.186816,
       "type": "run_finished",
       "task_id": null,
       "agent": null,
-      "message": "run succeeded in 8021ms",
+      "message": "run succeeded in 10796ms",
       "data": {
         "status": "succeeded",
         "counts": {
@@ -1209,14 +1209,14 @@
       "approved": true,
       "approver": "auto-approve",
       "reason": "--yes supplied; gate recorded but not blocking",
-      "ts": 1790137302.5719373
+      "ts": 1790143868.413197
     },
     {
       "task_id": "T-900-R1",
       "approved": true,
       "approver": "auto-approve",
       "reason": "--yes supplied; gate recorded but not blocking",
-      "ts": 1790137306.7556133
+      "ts": 1790143874.605384
     }
   ],
   "blackboard_keys": [
@@ -1999,28 +1999,28 @@
             "status": "pass",
             "findings": [],
             "detail": "3/3 required paths present",
-            "duration_ms": 2
+            "duration_ms": 3
           },
           {
             "name": "syntax",
             "status": "pass",
             "findings": [],
             "detail": "parsed 16 python file(s)",
-            "duration_ms": 25
+            "duration_ms": 31
           },
           {
             "name": "guardrails",
             "status": "pass",
             "findings": [],
             "detail": "no forbidden operations found",
-            "duration_ms": 39
+            "duration_ms": 45
           },
           {
             "name": "api_contract",
             "status": "pass",
             "findings": [],
             "detail": "7/7 declared endpoints implemented",
-            "duration_ms": 32
+            "duration_ms": 44
           },
           {
             "name": "traceability",
@@ -2033,8 +2033,8 @@
             "name": "tests",
             "status": "pass",
             "findings": [],
-            "detail": "36 passed, 0 failed, 0 skipped in 3705ms",
-            "duration_ms": 3706
+            "detail": "36 passed, 0 failed, 0 skipped in 4426ms",
+            "duration_ms": 4427
           }
         ],
         "attempt": 2
@@ -2069,7 +2069,7 @@
           "Out of scope, still unbuilt: Malware and phishing classification of submitted targets"
         ],
         "limitations": [
-          "Correctness is established only as far as the suite asserts it (36 passed, 0 failed, 0 skipped in 3705ms). A passing suite bounds risk; it does not eliminate it.",
+          "Correctness is established only as far as the suite asserts it (36 passed, 0 failed, 0 skipped in 4426ms). A passing suite bounds risk; it does not eliminate it.",
           "No performance, load or security testing was run, so any latency, throughput or security target in the requirements is design intent rather than a measured result.",
           "Contract conformance is structural: every declared endpoint exists, but request and response bodies are not schema-validated against the published spec.",
           "3 requirement(s) were resolved by an assumed default rather than by a human answer; if any of those assumptions is wrong, the design built on it is wrong.",

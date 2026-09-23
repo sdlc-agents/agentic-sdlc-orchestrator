@@ -8,6 +8,7 @@ platform usable as a library.
 from __future__ import annotations
 
 import hashlib
+import json
 import shutil
 import time
 from collections.abc import Callable
@@ -16,6 +17,8 @@ from pathlib import Path
 
 from .agents import build_registry
 from .agents import summary as summary_agent
+from .metrics import collect as collect_metrics
+from .metrics import render as render_metrics
 from .models import ArtifactKind, Event, EventType, RiskLevel, RunState, RunStatus, TaskStatus
 from .orchestration import (
     CycleError,
@@ -303,6 +306,12 @@ def _persist(recorder: RunRecorder, engine: Engine, state: RunState) -> None:
     _refresh_summary(state)
     recorder.save(state)
     recorder.write_text("graph.mmd", engine.graph.to_mermaid())
+
+    # Derived from the trace the run already produced, so the numbers cannot
+    # drift from what actually happened.
+    metrics = collect_metrics(state)
+    recorder.write_text("metrics.json", json.dumps(metrics.as_dict(), indent=2))
+    recorder.write_text("metrics.md", render_metrics(metrics))
     # Reports describe the run, not the deliverable, so they live beside the
     # trace instead of in the workspace the next validation round would re-scan.
     for artifact in state.artifacts.values():

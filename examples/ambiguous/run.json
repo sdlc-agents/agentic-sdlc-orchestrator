@@ -1,11 +1,11 @@
 {
-  "run_id": "c6b39dd3",
+  "run_id": "fdf173b1",
   "requirement": "Build a scalable URL shortener service with APIs, persistence, and analytics.",
   "scenario": "url_shortener",
   "mode": "mock",
   "status": "needs_clarification",
-  "started_at": 1790137319.4750304,
-  "finished_at": 1790137319.4882145,
+  "started_at": 1790143890.0874848,
+  "finished_at": 1790143890.108361,
   "tasks": {
     "T-001": {
       "id": "T-001",
@@ -107,11 +107,11 @@
   "events": [
     {
       "seq": 1,
-      "ts": 1790137319.4750304,
+      "ts": 1790143890.0874848,
       "type": "run_started",
       "task_id": null,
       "agent": null,
-      "message": "run c6b39dd3 (mock mode, 4 tasks)",
+      "message": "run fdf173b1 (mock mode, 4 tasks)",
       "data": {
         "tasks": 4,
         "levels": 3,
@@ -124,7 +124,7 @@
     },
     {
       "seq": 2,
-      "ts": 1790137319.4750304,
+      "ts": 1790143890.0874848,
       "type": "task_started",
       "task_id": "T-001",
       "agent": "requirement",
@@ -136,7 +136,7 @@
     },
     {
       "seq": 3,
-      "ts": 1790137319.4750304,
+      "ts": 1790143890.0874848,
       "type": "clarification_requested",
       "task_id": null,
       "agent": null,
@@ -149,11 +149,11 @@
     },
     {
       "seq": 4,
-      "ts": 1790137319.4882145,
+      "ts": 1790143890.108361,
       "type": "run_finished",
       "task_id": null,
       "agent": null,
-      "message": "run needs_clarification in 13ms",
+      "message": "run needs_clarification in 20ms",
       "data": {
         "status": "needs_clarification",
         "counts": {
