@@ -36,6 +36,31 @@ class TestWorkspace:
         with pytest.raises(GuardrailViolation):
             ws.resolve(path)
 
+    @pytest.mark.parametrize(
+        "path",
+        [
+            "C:/Windows/bad.py",
+            r"C:\Windows\bad.py",
+            r"\\server\share\bad.py",
+            "//server/share/bad.py",
+            r"app\..\..\escape.py",
+        ],
+    )
+    def test_the_guard_does_not_depend_on_the_host_os(self, tmp_path, path):
+        """A Windows-style path must be refused on Linux too, and vice versa.
+
+        `Path` follows the host, so on Linux "C:/Windows/x" is merely a folder
+        called "C:" and this slipped through — the same generated path was
+        accepted on one platform and refused on another.
+        """
+        ws = Workspace(tmp_path / "ws")
+        with pytest.raises(GuardrailViolation):
+            ws.resolve(path)
+
+    def test_separators_are_normalised_so_a_path_means_one_thing(self, tmp_path):
+        ws = Workspace(tmp_path / "ws")
+        assert ws.resolve("docs/adr/x.md") == ws.resolve(r"docs\adr\x.md")
+
     def test_exists_does_not_leak_an_escape_attempt_as_true(self, tmp_path):
         ws = Workspace(tmp_path / "ws")
         (tmp_path / "outside.txt").write_text("secret")
